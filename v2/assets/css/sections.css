@@ -1,0 +1,1420 @@
+/* ===== 00-header ===== */
+/* ==========================================================================
+   00 — Header: faixa cinza com logo, menu e botão "Acesso Portal RH"
+   Seção nova na v2. Medidas proporcionais ao recorte do mockup do cliente
+   (o conteúdo ocupa ~89% da largura da página = o .container de 1240px;
+   o logo mede 305/1799 dessa faixa útil ≈ 210px).
+   ========================================================================== */
+
+.site-header {
+  /* O mockup traz uma faixa cinza, mas coladinha no gradiente do hero ela
+     suja a transição. Branco com um fio de borda dá o mesmo recorte e some. */
+  background-color: var(--c-white);
+  border-bottom: 1px solid #E9E9EC;
+  padding: 14px 0;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  /* mesmo recuo interno do .container das outras seções: sem isto o logo
+     começa 10px à esquerda do H1 que vem logo abaixo */
+  padding-inline: var(--gutter);
+}
+
+/* O asset é o lockup com a tagline (923x429). Reduzido para caber num header
+   de altura decente, "Cuidando de você." renderiza com 7px e vira borrão — e é
+   justamente ela que empurra a altura do header. A razão 140/54 corta a faixa
+   da tagline e deixa só a marca; por ser razão e não altura fixa, o corte
+   acompanha a largura do logo nos outros breakpoints. */
+.site-header__logo {
+  width: 140px;
+  aspect-ratio: 140 / 54;
+  object-fit: cover;
+  object-position: top;
+  flex-shrink: 0;
+}
+
+/* menu e botão ficam colados à direita; a folga grande fica entre eles e o logo */
+.site-header__nav {
+  margin-left: auto;
+}
+
+.site-header__menu {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.site-header__link {
+  font-family: var(--ff-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--c-ink);
+  transition: color .3s;
+}
+
+.site-header__link:hover,
+.site-header__link:focus {
+  color: #8B1680;
+}
+
+.site-header__portal {
+  flex-shrink: 0;
+  margin-left: 56px;
+  /* 44px = o padding lateral medido dentro do botão do recorte; a largura
+     total (229px) fica menor que os 246px do mockup porque o texto é
+     Montserrat, e não a Times do render do PowerPoint */
+  padding: 11px 28px;
+  border-radius: 100px;
+  background-image: var(--g-portal);
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  font-family: var(--ff-body);
+  font-size: 14px;  /* mesmo corpo dos links do menu ao lado */
+  font-weight: 600;
+  line-height: 1;   /* a altura (36px) vem do padding, não da entrelinha */
+  color: var(--c-white);
+  white-space: nowrap;
+  transition: background-image .5s;
+}
+
+.site-header__portal:hover,
+.site-header__portal:focus {
+  background-image: var(--g-portal-hover);
+  color: var(--c-white);
+}
+
+/* ---- Botão hambúrguer ---------------------------------------------------
+   Existe só abaixo de 767px; acima disso o menu está sempre visível.
+   -------------------------------------------------------------------------- */
+.site-header__burger {
+  display: none;
+  flex-shrink: 0;
+  /* 44x44 é o alvo de toque mínimo recomendado; as barras ocupam 22px no meio */
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.site-header__burger-barra {
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--c-ink);
+  transition: transform .25s, opacity .2s;
+}
+
+/* aberto: as barras viram um X */
+.site-header--menu-aberto .site-header__burger-barra:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.site-header--menu-aberto .site-header__burger-barra:nth-child(2) {
+  opacity: 0;
+}
+.site-header--menu-aberto .site-header__burger-barra:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ==========================================================================
+   Breakpoints
+   ========================================================================== */
+
+/* 40px laterais = o mesmo respiro que o hero usa nesta faixa */
+@media (max-width: 1024px) {
+  .site-header {
+    padding: 14px 40px;
+  }
+
+  /* o recuo de 40px já vem do .site-header */
+  .site-header__inner {
+    padding-inline: 0;
+  }
+
+  .site-header__logo {
+    width: 130px;
+  }
+
+  .site-header__menu {
+    gap: 32px;
+  }
+
+  .site-header__link {
+    font-size: 14px;
+  }
+
+  .site-header__portal {
+    margin-left: 32px;
+    padding: 11px 22px;   /* 36px, mesma altura dos outros breakpoints */
+    font-size: 14px;      /* mesmo corpo dos links do menu ao lado */
+  }
+}
+
+/* Sem hambúrguer (a página não tem JS): logo e botão na primeira linha,
+   os três links quebram para uma segunda linha centralizada.
+   O <nav> tem flex-basis:100%, então nunca cabe ao lado do logo e cai
+   sozinho para a linha de baixo; o `order` compensa ele vir antes do
+   botão no HTML. */
+@media (max-width: 767px) {
+  /* o painel do menu é ancorado no header, por isso o position:relative */
+  .site-header {
+    position: relative;
+    padding: 8px 28px;
+  }
+
+  /* uma linha só: logo | botão do portal | hambúrguer */
+  .site-header__inner {
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding-inline: 0;
+  }
+
+  /* flex-basis 0 + max-width: o logo nunca conta como 140px na hora de decidir
+     a quebra, então numa tela de 320px ele encolhe no espaço que sobra em vez
+     de empurrar o resto para outra linha */
+  .site-header__logo {
+    flex: 1 1 0;
+    width: auto;
+    max-width: 112px;
+    min-width: 0;
+  }
+
+  .site-header__portal {
+    margin-left: auto;
+    padding: 11px 18px;  /* 36px, igual aos demais breakpoints */
+    font-size: 14px;
+  }
+
+  /* "Acesso Portal RH" ocupava metade da largura da tela ao lado do logo */
+  .site-header__portal-prefixo {
+    display: none;
+  }
+
+  .site-header__burger {
+    display: flex;
+    /* -10px cola o alvo de 44px na borda direita sem empurrar o header */
+    margin-right: -10px;
+  }
+
+  /* Painel: sai do fluxo e cai por cima do hero, para abrir e fechar sem
+     empurrar a página. */
+  .site-header__nav {
+    position: absolute;
+    top: 100%;
+    /* o ancestral posicionado é o .container (position:relative no base.css),
+       que já está recuado 28px: os -28px devolvem o painel à borda da tela */
+    left: -28px;
+    right: -28px;
+    z-index: 200;
+    display: none;
+    margin-left: 0;
+    padding: 4px 28px 12px;
+    background-color: var(--c-white);
+    border-bottom: 1px solid #E9E9EC;
+    box-shadow: 0 14px 24px rgba(0, 0, 0, .10);
+  }
+
+  .site-header--menu-aberto .site-header__nav {
+    display: block;
+  }
+
+  .site-header__menu {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  /* linha inteira clicável, com alvo de toque de 48px */
+  .site-header__link {
+    display: block;
+    padding: 15px 0;
+    font-size: 16px;
+  }
+
+  .site-header__item + .site-header__item .site-header__link {
+    border-top: 1px solid #F0F0F3;
+  }
+}
+
+/* ===== 01-hero ===== */
+/* ==========================================================================
+   01 — Hero: título, subtítulo e mockup sobre o gradiente de marca
+   Base: o hero da v1. Mudou o fundo (era a imagem Novo-Projeto-27.webp),
+   saiu o logo (foi para o header) e entrou o subtítulo.
+   ========================================================================== */
+
+.hero {
+  position: relative;   /* base do z-index:100 aplicado <=767 */
+  background-color: #940039;   /* reserva, se o gradiente não pintar */
+
+  /* Fundo em duas camadas, na ordem em que o CSS as empilha:
+     1ª (por cima) brilho laranja preso ao canto inferior esquerdo, que se
+        dissolve antes da metade da seção;
+     2ª (base)     diagonal carmim → magenta → roxo → azul, da esquerda para
+        a direita, terminando no azul escuro do canto inferior direito.
+     Cantos amostrados do mockup do cliente:
+        #940039 sup.esq · #003D8B sup.dir · #D76300 inf.esq · #15205E inf.dir
+     Para ajustar, mexa em uma camada de cada vez: o ângulo (100deg) inclina a
+     faixa magenta; o raio do radial (62% 85%) manda até onde o laranja vai. */
+  background-image:
+    radial-gradient(62% 85% at 0% 100%,
+      rgba(215, 99, 0, 1)     0%,
+      rgba(215, 99, 0, .98)  25%,
+      rgba(215, 99, 0, .85)  50%,
+      rgba(215, 99, 0, .58)  70%,
+      rgba(215, 99, 0, .26)  86%,
+      rgba(215, 99, 0, 0)   100%),
+    linear-gradient(100deg,
+      #940039   0%,
+      #A50040  10%,
+      #A30058  18%,
+      #941279  28%,
+      #7C2492  38%,
+      #4A36A1  50%,
+      #20399A  62%,
+      #0C3787  75%,
+      #023C8A  88%,
+      #003D8B  94%,
+      #15205E 100%);
+}
+
+.hero__inner {
+  display: flex;
+}
+
+/* ---- Coluna do texto ---------------------------------------------------- */
+.hero__copy {
+  width: 53.333%;
+  /* 10px laterais = gap padrão de coluna do Elementor */
+  padding: 120px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero__title {
+  /* mesma medida da v1; o max-width:100% encolhe o título em telas menores */
+  width: 577px;
+  max-width: 100%;
+  font-family: var(--ff-display);
+  font-size: 52px;
+  font-weight: 200;
+  line-height: 1em;
+  color: var(--c-white);
+}
+
+.hero__title-em {
+  font-weight: 500;
+}
+
+/* O mockup afasta bastante o subtítulo do título — é a folga que sobra no
+   lugar do logo. 460px de medida mantêm a quebra do mockup:
+   "…online e muito / mais em um clique." */
+.hero__subtitle {
+  /* o subtítulo é continuação do título, não um bloco solto no pé do hero */
+  margin-top: 24px;
+  max-width: 480px;
+  font-family: var(--ff-body);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.5em;
+  color: var(--c-white);
+}
+
+/* ---- Coluna do mockup --------------------------------------------------- */
+.hero__media {
+  width: 46.276%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* -120px: o iPhone invade a coluna de texto; 6px o afasta da borda direita */
+.hero__mockup {
+  margin: 0 6px 0 -120px;
+}
+
+.hero__mockup img {
+  width: 80%;
+  /* o widget de imagem do Elementor é text-align:center por padrão: o mockup
+     fica centralizado dentro da caixa deslocada, não encostado à esquerda */
+  margin-inline: auto;
+}
+
+/* ==========================================================================
+   Breakpoints
+   ========================================================================== */
+
+
+/* ==========================================================================
+   Botão flutuante "Acessar área logada"
+   Mantido da v1 por decisão do cliente: convive com o "Acesso Portal RH"
+   do header novo. Vive fora do <header> e das <section> porque é position:fixed.
+   ========================================================================== */
+.floating-cta {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  /* na v1 esse margin-bottom vinha do "widgets space" do Elementor; num elemento
+     fixo ele soma ao bottom, então o afastamento real da base é 28+20 = 48px */
+  margin-bottom: 20px;
+  z-index: 99999;
+  padding: 11px 28px;   /* mesma anatomia do botão do header */
+  border-radius: 100px;
+  background-color: transparent;
+  background-image: var(--g-brand);
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  font-family: var(--ff-body);
+  font-size: 14px;
+  font-weight: 600;   /* era o único botão 500 da página */
+  line-height: 1;   /* a altura (36px) vem do padding, não da entrelinha */
+  color: var(--c-white);
+  transition: background-image .5s;
+}
+
+.floating-cta:hover,
+.floating-cta:focus {
+  background-image: var(--g-brand-hover);
+  color: var(--c-white);
+}
+
+@media (max-width: 1024px) {
+  .hero {
+    padding: 0 40px;
+  }
+
+  /* 52px só cabem em 2 linhas enquanto a coluna tem ~580px; daqui para baixo
+     ela cai para 367px e o título ia a 3 e depois a 4 linhas. */
+  .hero__title {
+    font-size: 40px;
+  }
+
+  /* 120px de padding vertical só fazem sentido enquanto é o mockup que dita a
+     altura da seção; abaixo disso o texto passa na frente e o hero vira vão.
+     Na horizontal o recuo de 40px já vem do .hero: os 10px de gutter aqui
+     empurrariam o título 10px à direita do eixo do resto da página. */
+  .hero__copy {
+    padding: 72px 0;
+  }
+
+  /* 420px mantêm a mesma quebra do subtítulo neste corpo menor */
+  .hero__subtitle {
+    margin-top: 20px;
+    max-width: 420px;
+    font-size: 20px;
+  }
+
+  /* mockup encostado no rodapé da seção (align-content:flex-end da coluna) */
+  .hero__media {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 767px) {
+  /* na vertical a caixa é alta e estreita: o gradiente é inclinado mais para
+     baixo, para manter carmim em cima, laranja embaixo à esquerda e azul
+     escuro embaixo à direita */
+  .hero {
+    padding: 0;
+    z-index: 100;   /* hero acima da seção seguinte: o iPhone sangra para fora */
+    background-image:
+      radial-gradient(85% 42% at 0% 100%,
+        rgba(215, 99, 0, 1)     0%,
+        rgba(215, 99, 0, .98)  25%,
+        rgba(215, 99, 0, .85)  50%,
+        rgba(215, 99, 0, .58)  70%,
+        rgba(215, 99, 0, .26)  86%,
+        rgba(215, 99, 0, 0)   100%),
+      linear-gradient(152deg,
+        #940039   0%,
+        #A50040  10%,
+        #A30058  18%,
+        #941279  28%,
+        #7C2492  38%,
+        #4A36A1  50%,
+        #20399A  62%,
+        #0C3787  75%,
+        #023C8A  88%,
+        #003D8B  94%,
+        #15205E 100%);
+  }
+
+  .hero__inner {
+    flex-direction: column;
+  }
+
+  .hero__copy {
+    width: 100%;
+    padding: 60px 28px 0 28px;
+  }
+
+  .hero__title {
+    width: 100%;
+    max-width: 100%;
+    /* teto nos 40px da faixa de 1024: sem ele o 7.1vw passa de 40px acima de
+       563px e chega a 54,5px em 767 — maior que os 52px do desktop */
+    font-size: min(7.1vw, 40px);
+    text-align: center;
+  }
+
+  /* o respiro de 20px que era do título passa para o subtítulo, que agora é
+     o último item antes do mockup */
+  .hero__subtitle {
+    margin-top: 24px;
+    padding-bottom: 20px;
+    max-width: 100%;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .hero__media {
+    width: 100%;
+  }
+
+  .hero__mockup {
+    margin: 0 2% 0 -18%;
+  }
+
+  /* <=767 o spec repete width:80% na imagem: idêntico ao desktop */
+
+  /* Botão flutuante: mesmo recuo reduzido da v1 no mobile */
+  .floating-cta {
+    right: 16px;
+    bottom: 16px;
+  }
+}
+
+/* ===== 02-o-que-e ===== */
+/* ==========================================================================
+   02 · O que é — grade de 6 serviços (esquerda) + bloco de texto (direita)
+   Seção nova da v2, logo depois do hero. Fundo #EEEEEE (--c-surface).
+   Os cards herdam as métricas e as cores da grade de benefícios da v1.
+   ========================================================================== */
+
+.about {
+  background-color: var(--c-surface);
+  /* as duas seções seguintes dividem o mesmo fundo cinza: os paddings de
+     baixo e de cima somavam 170px de vazio na emenda */
+  padding: 80px 0 40px;
+}
+
+/* Duas colunas praticamente iguais: no mockup a grade mede ~586px e o texto
+   ~565px dentro do container de 1240px, com ~88px entre elas. */
+.about__inner {
+  display: grid;
+  /* 7fr/5fr em vez de 1fr/1fr: cards mais largos quebram menos linhas e a
+     grade encolhe; a coluna de texto estreita e cresce. Os dois blocos ficam
+     de alturas parecidas, e o align-items:center fecha o resto da diferença. */
+  grid-template-columns: 7.5fr 4.5fr;
+  align-items: center;
+  column-gap: 72px;
+  padding-inline: var(--gutter);
+}
+
+/* ---- Grade de 6 cards ---------------------------------------------------
+   As bordas de 1px de cards vizinhos se somam e formam as linhas internas
+   da "tabela", exatamente como na grade de benefícios da v1.
+   ------------------------------------------------------------------------ */
+.about__grid {
+  --about-line: var(--c-card-line);           /* borda fina dos cards */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.about__item {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: start;
+  padding: 30px 26px 32px 26px;
+  background-color: var(--c-white);
+  border: 1px solid var(--about-line);
+}
+
+/* Só os quatro cantos externos da grade são arredondados */
+.about__item:nth-child(1) { border-radius: 20px 0 0 0; }
+.about__item:nth-child(2) { border-radius: 0 20px 0 0; }
+.about__item:nth-child(5) { border-radius: 0 0 0 20px; }
+.about__item:nth-child(6) { border-radius: 0 0 20px 0; }
+
+/* ---- Ícone --------------------------------------------------------------
+   Cores amostradas do mockup do cliente — são as mesmas seis duplas
+   (fundo/traço) que cada ícone já tinha na grade de benefícios da v1.
+   ------------------------------------------------------------------------ */
+.about__icon {
+  /* flex-start impede o quadrado colorido de esticar na largura do card */
+  align-self: flex-start;
+  padding: 12px;
+  border-radius: 16px;
+  font-size: 26px;
+  line-height: 1;
+  background-color: var(--about-icon-bg);
+  color: var(--about-icon-fg);
+}
+
+.about__icon .icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
+.about__icon--telemedicina { --about-icon-bg: #FDEAF0; --about-icon-fg: #D51A2C; }
+.about__icon--consultas    { --about-icon-bg: #EEE9FB; --about-icon-fg: #7B2C9E; }
+.about__icon--medicamentos { --about-icon-bg: #F3E8FA; --about-icon-fg: #8A2A96; }
+.about__icon--exames       { --about-icon-bg: #FDEAF0; --about-icon-fg: #C71E3F; }
+.about__icon--mental       { --about-icon-bg: #FBE7F2; --about-icon-fg: #B01A66; }
+.about__icon--nutricao     { --about-icon-bg: #F7E6F7; --about-icon-fg: #9E2380; }
+
+/* ---- Texto dos cards ---------------------------------------------------- */
+.about__title {
+  /* 8px no topo repõe a margem que o h3 tinha no tema original, zerada
+     pelo reset do base.css — igual à grade da v1. */
+  margin-block-start: 8px;
+  margin-block-end: 7px;
+  font-family: var(--ff-display);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.2em;
+  color: var(--c-ink);
+}
+
+.about__desc {
+  font-family: var(--ff-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6em;
+  color: var(--c-ink-soft);
+  text-wrap: balance;
+}
+
+/* ---- Coluna de texto ----------------------------------------------------
+   Medidas derivadas do mockup: entrelinha de 44,8px no parágrafo de
+   destaque e de 34,8px nos demais; ~32px entre parágrafos.
+   ------------------------------------------------------------------------ */
+.about__lead {
+  font-family: var(--ff-display);
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.4em;
+  color: var(--c-ink);
+  text-wrap: balance;   /* sem isto a última linha fica só com "a sério." */
+}
+
+.about__para {
+  margin-block-start: 32px;
+  font-family: var(--ff-body);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.7em;
+  color: var(--c-gray-600);
+}
+
+.about__para strong {
+  font-weight: 700;
+  color: var(--c-ink);
+}
+
+/* ==========================================================================
+   Responsivo
+   ========================================================================== */
+
+/* Até 1024px as duas colunas continuam lado a lado, só mais estreitas. */
+@media (max-width: 1024px) {
+  .about {
+    padding: 60px 0 30px;   /* a emenda com .plans-head acompanha a escala */
+  }
+
+  /* Lado a lado a 1024px a coluna de texto cai para ~390px: fica estreita
+     demais para crescer e sobra um vazio de 300px ao lado da grade. Abaixo
+     de 1024 o bloco vira uma coluna só — texto apresentando a grade. */
+  .about__inner {
+    grid-template-columns: 1fr;
+    row-gap: 40px;
+    padding-inline: 40px;   /* mesmo gutter do header e do hero nesta faixa */
+  }
+
+  /* 640 e nao 720: a 720 o parágrafo chegava a 78-80 caracteres por linha,
+     acima do teto confortável de 75, e a última linha ficava órfã */
+  .about__copy { order: -1; max-width: 640px; }
+
+  /* Com a grade ocupando a largura toda, 2 colunas deixariam cards de ~480px
+     para uma descrição de duas linhas. Em 3x2 o card volta a um tamanho de
+     cartão. Os cantos arredondados mudam de lugar junto: 1,3 em cima e 4,6 embaixo. */
+  .about__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .about__item:nth-child(n) { border-radius: 0; }
+  .about__item:nth-child(1) { border-radius: 20px 0 0 0; }
+  .about__item:nth-child(3) { border-radius: 0 20px 0 0; }
+  .about__item:nth-child(4) { border-radius: 0 0 0 20px; }
+  .about__item:nth-child(6) { border-radius: 0 0 20px 0; }
+
+  /* Só o padding lateral do card encolhe: com a grade ocupando metade do
+     container, é o que mantém a área útil do card nos ~199px que ela tem na
+     grade da v1 nesta largura. Ícone, título e descrição ficam na escala da
+     v1, que não muda em <=1024px. */
+  .about__item {
+    padding-inline: 18px;
+  }
+
+  .about__lead  { font-size: 26px; }
+
+  .about__para {
+    margin-block-start: 24px;
+    font-size: 17px;
+  }
+}
+
+/* Abaixo de 767px as colunas empilham. O bloco de texto vem PRIMEIRO:
+   é ele que diz o que o VCuida é, e a grade é o detalhamento. Mantida a
+   ordem no HTML (grade antes) para não inverter a leitura no desktop; no
+   mobile o `order` sobe o texto. */
+@media (max-width: 767px) {
+  .about {
+    padding: 40px 0 20px;   /* idem, no mobile */
+  }
+
+  .about__inner {
+    grid-template-columns: 1fr;
+    row-gap: 32px;
+    padding-inline: 28px;
+  }
+
+  .about__copy { order: -1; }
+
+  .about__grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Em uma coluna o card volta ao padding lateral da v1 */
+  .about__item {
+    padding-inline: 26px;
+  }
+
+  /* Empilhados, os cantos arredondados passam a ser os do topo e da base */
+  .about__item:nth-child(1) { border-radius: 20px 20px 0 0; }
+  .about__item:nth-child(2),
+  .about__item:nth-child(5) { border-radius: 0; }
+  .about__item:nth-child(6) { border-radius: 0 0 20px 20px; }
+
+  /* Mesma escala de tipografia que os cards da v1 usam no mobile */
+  .about__title { font-size: 16px; }
+
+  .about__desc {
+    font-size: 14px;
+    line-height: 1.7em;
+  }
+
+  .about__lead { font-size: 22px; }
+
+  .about__para {
+    margin-block-start: 20px;
+    font-size: 16px;
+    line-height: 1.7em;
+  }
+}
+
+/* ===== 03-planos-header ===== */
+/* ==========================================================================
+   03 · Planos — cabeçalho ("Escolha seu plano")
+   Igual à v1; a única mudança é o subtítulo, agora em duas linhas.
+   ========================================================================== */
+
+.plans-head {
+  position: relative;               /* base do z-index e dos pontinhos */
+  z-index: 100;                     /* cards (z-index:101) passam por cima */
+  /* Os pontinhos decorativos ficam de propósito fora do container e chegavam a
+     x=1339 numa tela de 390px. Isso fazia o <body> virar um contêiner de
+     rolagem horizontal de 1339px — invisível por causa do overflow-x:hidden,
+     mas real: ao focar um elemento o navegador rolava o body e a página inteira
+     saía do lugar. Clipar aqui resolve na origem; a seção é full-bleed, então
+     o corte cai exatamente na borda da tela, igual ao que já se via.
+     Não afeta os cards de plano: eles são uma <section> irmã, não filha. */
+  overflow: hidden;
+  padding: 40px 0 240px;            /* 240px = altura que os cards invadem */
+  background-color: var(--c-surface);
+}
+
+/* Padding de 10px que a coluna do original aplica em volta do conteúdo.
+   Também é a caixa de referência dos pontinhos absolutos. */
+.plans-head__inner {
+  position: relative;
+  padding: 10px;
+}
+
+/* ---- Divisor: linha — título — linha ------------------------------------ */
+.plans-head__divider {
+  display: flex;
+  align-items: center;
+  width: 700px;
+  margin: 0 auto 20px;              /* 20px = espaço até o subtítulo */
+  padding-block: 2px;
+  text-align: center;
+}
+
+.plans-head__divider::before,
+.plans-head__divider::after {
+  content: "";
+  display: block;
+  flex-grow: 1;
+  border-top: 4px solid var(--c-ink);
+}
+
+.plans-head__title {
+  flex-shrink: 0;
+  max-width: 95%;                   /* garante que as linhas nunca zerem */
+  margin: 0 27px;                   /* respiro entre título e linhas */
+  font-family: var(--ff-display);
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1.3em;
+  color: var(--c-ink);
+}
+
+/* ---- Subtítulo ----------------------------------------------------------
+   Duas linhas, quebradas por <br>. O padding-bottom de 60px é o mesmo da v1:
+   somado aos 10px do __inner dá os ~70px que o mockup mostra entre a última
+   linha do texto e o topo dos cards. A seção fica ~29px mais alta (a segunda
+   linha), o que empurra os cards junto — é o comportamento esperado.
+   É padding (e não margin) para não colapsar no mobile, onde o container
+   perde o padding vertical.
+   ------------------------------------------------------------------------ */
+.plans-head__subtitle {
+  padding-bottom: 60px;
+  font-family: var(--ff-body);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6em;
+  color: var(--c-gray-600);
+  text-align: center;
+}
+
+/* ---- Pontinhos decorativos ---------------------------------------------
+   No original cada imagem mora numa caixa de 35px/30px posicionada em
+   (left, top) e fica centrada dentro dela; aqui a imagem é posicionada
+   direto, com a centragem já embutida nos valores.
+   Caixas originais: a = 35px em 1095px/21px · b = 30px em -112px/177px ·
+   c = 30px em 1314px/209px. Os valores negativos/acima de 1240px são de
+   propósito: os pontos ficam fora do container, e em telas estreitas o
+   overflow-x:hidden do body os esconde.
+   ------------------------------------------------------------------------ */
+.plans-head__dot {
+  position: absolute;
+  filter: invert(1);                /* o PNG é escuro; invertido fica claro */
+}
+
+.plans-head__dot--a { top: 28.8px;  left: 1106.5px; width: 12px; }
+.plans-head__dot--b { top: 181.3px; left: -106.5px; width: 19px; }
+.plans-head__dot--c { top: 213.3px; left: 1319.5px; width: 19px; }
+
+/* ==========================================================================
+   Responsivo
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  /* mesmo gutter de 40px do header, hero, about e cards nesta faixa */
+  .plans-head__inner {
+    padding: 10px 40px;
+  }
+
+  /* a escala de display inteira desce aqui (hero 52->40, about__lead 32->26);
+     só este H2 tinha ficado em 40px, empatando com o H1 do hero */
+  .plans-head__title {
+    font-size: 32px;
+  }
+
+  /* 700px fixos estouram a coluna abaixo de 780px de viewport */
+  .plans-head__divider {
+    width: min(700px, 100%);
+  }
+}
+
+@media (max-width: 767px) {
+  .plans-head {
+    z-index: 1;
+    /* 40px em cima acompanham o padding-bottom reduzido do .about; os 210px
+       de baixo são a altura que os cards invadem e não podem mudar sozinhos */
+    padding: 40px 0 210px;
+  }
+
+  .plans-head__inner { padding: 0 28px; }
+
+  .plans-head__divider { width: 264px; }
+
+  /* Tipografia global do tema cai no mobile (Kanit 40→20, Montserrat 18→15) */
+  .plans-head__title { font-size: 20px; }
+
+  .plans-head__subtitle { font-size: 15px; }
+}
+
+/* ===== 04-planos-cards ===== */
+/* ==========================================================================
+   VCuida v2 — 04 · Planos (cards)
+   Base: a seção .planos-cards da v1. Mantém a sobreposição sobre a faixa
+   cinza do cabeçalho de planos; o desenho interno do card vem do mockup novo.
+   ========================================================================== */
+
+/* O margin-top negativo puxa os cards para cima da faixa cinza da seção
+   anterior; z-index (com position:relative) mantém os cards por cima dela. */
+.planos-cards {
+  position: relative;
+  z-index: 101;
+  margin-top: -240px;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+/* 1196px = largura do container original. O gap de 20px e o padding lateral
+   de 10px reproduzem a margem de 10px que cada coluna tinha na v1. */
+.planos-cards__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));   /* minmax: sem ele o preço do TOTAL rouba largura das outras colunas a 768px */
+  align-items: stretch;          /* os três cards ficam da mesma altura */
+  gap: 20px;
+  width: 100%;
+  max-width: var(--container);   /* mesmo eixo das demais seções */
+  margin-inline: auto;
+  padding-inline: 10px;
+}
+
+/* ---- Card ---------------------------------------------------------------
+   Coluna flex: o botão usa margin-top:auto e encosta no pé do card, de modo
+   que os três botões ficam na mesma linha mesmo com listas de tamanhos
+   diferentes.
+   ------------------------------------------------------------------------ */
+
+.plano {
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  background-color: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
+  /* o lift é 500ms linear (herdado da v1); a sombra usa os 0.3s do tema */
+  transition: transform 500ms linear, box-shadow 0.3s;
+}
+
+.plano:hover {
+  transform: translateY(-30px);
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.13);
+}
+
+/* ---- Cabeçalho colorido -------------------------------------------------
+   Retângulo arredondado, texto branco. Uma cor por plano.
+   ------------------------------------------------------------------------ */
+
+.plano__name {
+  margin-bottom: 22px;
+  padding: 18px 24px;
+  border-radius: 8px;
+  text-align: center;
+  font-family: var(--ff-display);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2em;
+  color: var(--c-white);
+}
+
+.plano--mental    .plano__name { background-color: var(--c-teal); }
+.plano--essencial .plano__name { background-color: var(--c-plan-essencial); }
+.plano--total     .plano__name { background-color: var(--c-plan-total); }
+
+/* ---- Preço --------------------------------------------------------------
+   "A partir de" em Montserrat, e o preço numa linha só (R$ pequeno,
+   valor grande, /mês pequeno e mais claro), alinhados pela base.
+   ------------------------------------------------------------------------ */
+
+.plano__from {
+  margin-bottom: 4px;
+  font-family: var(--ff-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--c-gray-600);
+}
+
+.plano__price {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--ff-display);
+  line-height: 1;
+  color: var(--c-gray-600);
+}
+
+.plano__currency {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.plano__amount {
+  font-size: 52px;
+  font-weight: 500;   /* 600 fazia o preço pesar mais que o H1 da página */
+}
+
+.plano__period {
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--c-gray-500);
+}
+
+/* ---- Lista de features -------------------------------------------------- */
+
+.plano__features {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  /* SEM margin-top:auto de propósito: cartão de preço é lido na horizontal, e
+     as três listas precisam começar na mesma linha para dar para comparar.
+     A folga dos cards curtos vai toda para cima do botão — é o preço de os
+     três cards terem a mesma altura, e é o que o mockup do cliente desenha. */
+  padding-top: 40px;
+}
+
+.plano__feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 8.5px;                    /* 3.5px do ícone + 5px do texto (padrão v1) */
+}
+
+.plano__feature .icon {
+  position: relative;
+  top: 5px;                      /* alinha o check com a 1ª linha do texto */
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  fill: var(--c-teal);
+}
+
+.plano__feature-text {
+  font-family: var(--ff-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6em;
+  color: var(--c-gray-600);
+  text-wrap: balance;   /* três features terminavam em órfã de uma palavra */
+}
+
+/* ---- Botão --------------------------------------------------------------
+   Como os três cards têm a mesma altura e listas de 1, 2 e 7 itens, sobra
+   folga nos dois primeiros. Dois margin-top:auto (aqui e na lista) fazem o
+   flex dividir essa folga em duas partes iguais, em vez de jogar tudo num
+   buraco único acima do botão. O padding-top garante o respiro mínimo no
+   card mais cheio (VCUIDA TOTAL), onde não sobra folga nenhuma.
+   ------------------------------------------------------------------------ */
+
+.plano__cta-wrap {
+  margin-top: auto;
+  padding-top: 40px;
+  text-align: center;
+}
+
+.plano__cta {
+  display: inline-block;
+  padding: 14px 34px;
+  font-family: var(--ff-body);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  color: var(--c-white);
+  background-color: var(--c-purple);
+  border: 0;
+  border-radius: 100px;
+  transition: background-color 0.3s;
+}
+
+.plano__cta:hover,
+.plano__cta:focus {
+  color: var(--c-white);
+  background-color: var(--c-purple-dark);
+}
+
+/* ==========================================================================
+   Responsivo
+   ========================================================================== */
+
+/* Os três cards continuam lado a lado, só que mais estreitos. */
+@media (max-width: 1024px) {
+  .planos-cards__grid {
+    gap: 16px;
+    padding-inline: 40px;   /* mesmo gutter das demais seções nesta faixa */
+  }
+
+  .plano { padding: 24px 20px; }
+
+  .plano__name {
+    padding: 16px 12px;
+    font-size: 17px;
+  }
+
+  .plano__currency,
+  .plano__period { font-size: 18px; }
+
+  .plano__amount { font-size: 42px; }
+
+  .plano__features { padding-top: 28px; }
+
+  .plano__feature-text {
+    font-size: 14px;
+    line-height: 1.55em;
+  }
+
+  .plano__cta-wrap { padding-top: 28px; }
+
+  .plano__cta {
+    /* a 768px a área útil do card é 177px e o rótulo mede 137px: com 24px de
+       cada lado o botão quebrava em duas linhas e virava bloco de 56px */
+    padding: 14px 16px;
+    white-space: nowrap;
+    font-size: 14px;
+  }
+}
+
+/* Empilha em coluna única, como na v1. */
+@media (max-width: 767px) {
+  .planos-cards {
+    z-index: 10;
+    /* acompanha o padding-bottom de .plans-head, que cai de 240 para 210 no
+       mobile: os dois têm de andar juntos, senão os cards sobem demais e
+       comem o respiro do subtítulo */
+    margin-top: -210px;
+    padding: 0 28px;
+  }
+
+  /* o espaçamento vertical passa a vir do margin-bottom de cada card */
+  .planos-cards__grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    max-width: none;
+    padding-inline: 0;
+  }
+
+  .plano {
+    margin-bottom: 20px;
+    padding: 28px 24px;
+    transition: box-shadow 0.3s;  /* sem lift onde não existe hover de mouse */
+  }
+
+  .plano:hover { transform: none; }
+
+  .plano__name {
+    padding: 16px 18px;
+    font-size: 16px;
+  }
+
+  .plano__currency,
+  .plano__period { font-size: 18px; }
+
+  .plano__amount { font-size: 44px; }
+
+  .plano__features { padding-top: 24px; }
+
+  .plano__feature-text {
+    font-size: 14px;
+    line-height: 1.7em;
+  }
+
+  .plano__cta-wrap { padding-top: 24px; }
+
+  .plano__cta {
+    padding: 14px 30px;
+    font-size: 14px;
+  }
+}
+
+/* ===== 05-cta ===== */
+/* ==========================================================================
+   05 — CTA  "Quer saber mais sobre a Vcuida e seus benefícios?"
+   Identica a v1: o cliente so pediu a troca do destino do link (ver HTML).
+   ========================================================================== */
+
+.cta {
+  padding: 0 0 60px;
+}
+
+.cta__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* coluna do Elementor: align-items/align-content center */
+  justify-content: center;
+  padding: var(--gutter);   /* 10px: gap padrao de coluna do Elementor (zerado <=767) */
+}
+
+.cta__lead {
+  padding-top: 60px;
+  margin-bottom: 20px;      /* espacamento padrao entre widgets do Elementor */
+  font-family: var(--ff-body);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6em;
+  color: var(--c-footer-navy);
+  text-align: center;
+}
+
+.cta__button {
+  display: inline-block;
+  padding: 16px 48px;
+  border: 6px solid var(--c-white);
+  border-radius: 100px;
+  background-color: #00B4CF;
+  font-family: var(--ff-body);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;           /* a altura do botao vem do padding, nao da entrelinha */
+  color: var(--c-white);
+  text-align: center;
+  transition: background-color .3s, border-color .3s, color .3s;
+}
+
+.cta__button:hover,
+.cta__button:focus {
+  background-color: #0190A5;
+  border-color: var(--c-cyan);
+  color: var(--c-white);
+}
+
+/* ==========================================================================
+   Breakpoints
+   ========================================================================== */
+
+/* <=1024px: o spec so repete font-size:18px / line-height:1.6em,
+   identicos ao desktop — nada a sobrescrever. */
+
+@media (max-width: 767px) {
+  .cta {
+    padding: 0 28px 60px;
+  }
+
+  /* coluna com margin/padding zerados no original */
+  .cta__inner {
+    padding: 0;
+  }
+
+  .cta__lead {
+    width: 198px;
+    max-width: 198px;
+    padding-top: 40px;
+    padding-bottom: 20px;
+    margin-bottom: 0;
+    /* 15px, nao 18px: o texto usa o preset de tipografia global do Elementor,
+       que o kit reduz para 15px em <=767. Medido em producao: 15px/24px. */
+    font-size: 15px;
+  }
+
+  .cta__button {
+    font-size: 14px;
+  }
+}
+
+/* ===== 06-footer ===== */
+/* ==========================================================================
+   06 — Rodapé
+   Fundo, cores e ícones herdados do rodapé da v1 (#03262D + BG-Blue.webp).
+   O que muda: o conteúdo vira quatro blocos em linha dentro do .container —
+   marca, "Contrate agora", "Suporte ao beneficiário" e o selo Vallora — com a
+   política de privacidade centralizada abaixo deles.
+   ========================================================================== */
+
+/* Sem padding lateral no desktop: o conteúdo alinha com o .container das demais
+   seções (header, planos, CTA). O respiro lateral entra nos breakpoints. */
+.footer {
+  background-color: var(--c-footer-navy);
+  /* caminho relativo ao arquivo CSS (assets/css/ -> assets/img/) */
+  background-image: url("../img/BG-Blue.webp");
+  background-position: center center;
+  background-size: cover;
+}
+
+.footer__inner {
+  padding: 80px 0 40px;
+}
+
+/* ---- Os quatro blocos em linha ------------------------------------------ */
+.footer__cols {
+  padding-inline: var(--gutter);   /* mesmo eixo do resto da página */
+  display: grid;
+  /* celulas do tamanho do conteudo com a folga distribuida: com 4 colunas
+     iguais os vaos entre os blocos saiam 95/167/74px e o selo Vallora parava
+     75px antes do eixo direito da pagina */
+  grid-template-columns: repeat(4, auto);
+  justify-content: space-between;
+  gap: 40px;
+  /* topo alinhado: os títulos "Contrate agora" e "Suporte ao beneficiário"
+     ficam na mesma linha */
+  align-items: start;
+}
+
+/* Só o bloco da marca centraliza: é uma logo solta, sem título. O bloco
+   Vallora não — "um produto" tem o mesmo papel dos títulos das outras colunas
+   e precisa nascer no mesmo eixo, que é o align-items:start do .footer__cols. */
+.footer__block--brand {
+  align-self: center;
+}
+
+/* ---- 1 · marca ---------------------------------------------------------- */
+/* VCuida.webp já tem o "V" branco e fundo transparente: funciona sobre o escuro. */
+.footer__brand-logo {
+  width: 220px;
+  max-width: 100%;
+}
+
+/* ---- Títulos dos blocos ------------------------------------------------- */
+.footer__block-title {
+  margin-bottom: 16px;
+  font-family: var(--ff-display);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.3em;
+  color: var(--c-white);
+}
+
+/* ---- Contatos ----------------------------------------------------------- */
+.footer__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer__contact-link {
+  display: flex;
+  align-items: center;
+  /* 9,5px = 4,5px de margem do <svg> + 5px de padding do texto no icon-list */
+  gap: 9.5px;
+  font-family: var(--ff-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6em;
+}
+
+.footer__icon {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  fill: var(--c-white);
+}
+
+.footer__contact-label {
+  color: var(--c-white);
+  transition: color 0.3s;
+}
+
+/* Como na v1: só o texto muda de cor no hover, o ícone continua branco. */
+.footer__contact-link:hover .footer__contact-label {
+  color: var(--c-cyan);
+}
+
+/* ---- 4 · "um produto" + logo Vallora ------------------------------------ */
+.footer__kicker {
+  /* 16px vinha do padding do widget-container original */
+  padding-bottom: 16px;
+  font-family: var(--ff-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6em;
+  color: var(--c-white);
+}
+
+.footer__vallora {
+  width: 200px;
+  max-width: 100%;
+}
+
+/* ---- Política de privacidade -------------------------------------------- */
+.footer__legal {
+  padding-top: 48px;
+  font-family: var(--ff-body);
+  font-size: 14px;
+  font-weight: 500;
+  /* como na v1: sem entrelinha extra no desktop */
+  line-height: 1;
+  color: var(--c-white);
+  text-align: center;
+}
+
+.footer__legal a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Breakpoints
+   ========================================================================== */
+
+/* <=1024px: os quatro blocos viram duas colunas. */
+@media (max-width: 1024px) {
+  /* mesmo respiro lateral do header nesta faixa */
+  .footer {
+    padding: 0 40px;
+  }
+
+  /* com 2 colunas a célula quase dobra (280px -> 456px): o conteúdo passa a
+     centralizar nela, como já faz no mobile e na linha da política abaixo */
+  .footer__cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px 32px;
+    justify-items: center;
+    text-align: center;
+  }
+
+  /* o link de contato é flex: sem isto o telefone fica preso à esquerda de um
+     bloco cuja largura é ditada pelo e-mail */
+  .footer__contact-link {
+    justify-content: center;
+  }
+}
+
+/* <=767px: tudo empilhado e centralizado, como no rodapé da v1. */
+@media (max-width: 767px) {
+  .footer {
+    padding: 0 20px;
+  }
+
+  .footer__inner {
+    /* 98px = a faixa que o .floating-cta ocupa (16 de bottom + 20 de margem +
+       38 de altura) mais os 24px de respiro; sem isso o botão fixo cobre o
+       link da política de privacidade no fim da página */
+    padding: 48px 0 98px;
+  }
+
+  .footer__cols {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .footer__block-title {
+    font-size: 18px;
+  }
+
+  .footer__contact {
+    gap: 12px;
+  }
+
+  .footer__contact-link {
+    justify-content: center;
+  }
+
+  /* A tipografia global usada aqui encolhe de 15px/1.6em para 14px/1.7em
+     abaixo de 767px. */
+  .footer__kicker,
+  .footer__contact-link {
+    font-size: 14px;
+    line-height: 1.7em;
+  }
+
+  .footer__legal {
+    padding-top: 28px;
+    line-height: 1.6em;
+  }
+}

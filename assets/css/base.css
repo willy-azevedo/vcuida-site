@@ -1,0 +1,83 @@
+/* ==========================================================================
+   VCuida — base: reset, tokens e primitivas de layout
+   Valores extraídos do CSS gerado pelo Elementor (fonte da verdade).
+   ========================================================================== */
+
+:root {
+  /* ---- Tipografia ---- */
+  --ff-display: "Kanit", system-ui, sans-serif;   /* títulos               */
+  --ff-body:    "Montserrat", system-ui, sans-serif; /* textos e botões    */
+
+  /* ---- Cores de marca ---- */
+  --c-white:        #FFFFFF;
+  --c-ink:          #1A1030;  /* azul-marinho dos títulos                  */
+  --c-ink-soft:     #5C5170;  /* corpo de texto dentro dos cards           */
+  --c-gray-600:     #54595F;  /* preço, textos secundários                 */
+  --c-gray-500:     #9A9A9A;
+  --c-line:         #E2E2E2;
+  --c-surface:      #EEEEEE;  /* fundo da seção de planos                  */
+  --c-hero-orange:  #EE6600;
+  --c-cyan:         #50C7DA;
+  --c-green:        #61CE70;
+  --c-green-dark:   #02D17D;
+  --c-footer-navy:  #03262D;
+
+  /* ---- Gradientes ---- */
+  --g-brand:       linear-gradient(115deg, #EA5B0C 0%, #7B2C9E 100%);
+  --g-brand-hover: linear-gradient(115deg, #CE510C 0%, #611C80 100%);
+
+  /* ---- Layout ---- */
+  --container: 1240px;
+  --gutter: 10px;
+}
+
+/* ---- Reset enxuto ------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+html, body { overflow-x: hidden; }
+
+body {
+  margin: 0;
+  font-family: var(--ff-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--c-gray-600);
+  background: var(--c-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6, p, figure, blockquote { margin: 0; }
+
+img, svg { display: block; max-width: 100%; }
+img { height: auto; border: 0; }
+
+a { color: inherit; text-decoration: none; }
+
+button { font: inherit; }
+
+ul, ol { margin: 0; padding: 0; list-style: none; }
+
+/* ---- Container --------------------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  position: relative;
+}
+
+@media (max-width: 1024px) { :root { --container: 1024px; } }
+@media (max-width: 767px)  { :root { --container: 767px;  } }
+
+/* ---- Utilitários -------------------------------------------------------- */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

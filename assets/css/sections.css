@@ -1,0 +1,921 @@
+/* ===== 01-hero ===== */
+/* ==========================================================================
+   01 — Hero: logo, título e mockup sobre o fundo laranja
+   Valores extraídos de spec2/01-hero.css (fonte da verdade).
+   ========================================================================== */
+
+.hero {
+  position: relative;   /* base do z-index:100 aplicado <=767 */
+  background-color: var(--c-hero-orange);
+  /* caminho relativo AO ARQUIVO CSS (build/), igual ao fonts.css com ../fonts/ */
+  background-image: url("../img/Novo-Projeto-27.webp");
+  background-position: center right;
+  background-size: cover;
+}
+
+.hero__inner {
+  display: flex;
+}
+
+/* ---- Coluna do texto ---------------------------------------------------- */
+.hero__copy {
+  width: 53.333%;
+  /* 10px laterais = gap padrão de coluna do Elementor */
+  padding: 120px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* align-content:center da coluna original */
+}
+
+/* -47px sobe o logo e -18px o puxa para fora da coluna, encostando no limite
+   do container; 20px embaixo é o espaçamento padrão entre widgets */
+.hero__logo {
+  width: 400px;
+  margin: -47px 0 20px -18px;
+}
+
+.hero__title {
+  /* o spec traz width:577px e max-width:577px; o max-width:100% ocupa o lugar
+     do flex-shrink do Elementor, que encolhia o título em telas menores */
+  width: 577px;
+  max-width: 100%;
+  font-family: var(--ff-display);
+  font-size: 52px;
+  font-weight: 200;
+  line-height: 1em;
+  color: var(--c-white);
+}
+
+.hero__title-em {
+  font-weight: 500;
+}
+
+/* ---- Coluna do mockup --------------------------------------------------- */
+.hero__media {
+  width: 46.276%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* -120px: o iPhone invade a coluna de texto; 6px o afasta da borda direita */
+.hero__mockup {
+  margin: 0 6px 0 -120px;
+}
+
+.hero__mockup img {
+  width: 80%;
+  /* o widget de imagem do Elementor é text-align:center por padrão: o mockup
+     fica centralizado dentro da caixa deslocada, não encostado à esquerda */
+  margin-inline: auto;
+}
+
+/* ==========================================================================
+   Botão flutuante — position:fixed no original, não faz parte do hero
+   ========================================================================== */
+.floating-cta {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  /* o widget do botão também recebe o 'widgets space' de 20px do Elementor
+     (não é o último widget da coluna); num elemento fixo esse margin-bottom
+     soma ao bottom, então o afastamento real da base da tela é 28+20 = 48px */
+  margin-bottom: 20px;
+  z-index: 99999;
+  padding: 12px 26px;
+  border-radius: 100px;
+  background-color: transparent;
+  background-image: var(--g-brand);
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  font-family: var(--ff-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;   /* a altura (38px) vem do padding, não da entrelinha */
+  color: var(--c-white);
+  transition: background-image .5s;
+}
+
+.floating-cta:hover,
+.floating-cta:focus {
+  background-image: var(--g-brand-hover);
+  color: var(--c-white);
+}
+
+/* ==========================================================================
+   Breakpoints
+   ========================================================================== */
+
+/* <=1024 e <=767 o spec repete font-size:14px no botão: idêntico ao desktop */
+@media (max-width: 1024px) {
+  .hero {
+    padding: 0 40px;
+  }
+
+  .hero__logo {
+    width: 300px;
+  }
+
+  /* mockup encostado no rodapé da seção (align-content:flex-end da coluna) */
+  .hero__media {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero {
+    padding: 0;
+    z-index: 100;   /* hero acima da seção seguinte: o iPhone sangra para fora */
+    background-position: bottom center;
+  }
+
+  .hero__inner {
+    flex-direction: column;
+  }
+
+  .hero__copy {
+    width: 100%;
+    padding: 60px 28px 0 28px;
+  }
+
+  /* margin auto = o text-align:center do original */
+  .hero__logo {
+    width: 180px;
+    margin: -22px auto 20px;
+  }
+
+  .hero__title {
+    width: 100%;
+    max-width: 100%;
+    padding-bottom: 20px;
+    font-size: 7.1vw;
+    text-align: center;
+  }
+
+  .hero__media {
+    width: 100%;
+  }
+
+  .hero__mockup {
+    margin: 0 2% 0 -18%;
+  }
+
+  /* <=767 o spec repete width:80% na imagem: idêntico ao desktop */
+
+  .floating-cta {
+    right: 16px;
+    bottom: 16px;
+  }
+}
+
+/* ===== 02-planos-header ===== */
+/* ==========================================================================
+   02 · Planos — cabeçalho ("Escolha seu plano")
+   ========================================================================== */
+
+.plans-head {
+  position: relative;               /* base do z-index e dos pontinhos */
+  z-index: 100;                     /* cards (z-index:101) passam por cima */
+  padding: 80px 0 240px;            /* 240px = altura que os cards invadem */
+  background-color: var(--c-surface);
+}
+
+/* Padding de 10px que a coluna do original aplica em volta do conteúdo.
+   Também é a caixa de referência dos pontinhos absolutos. */
+.plans-head__inner {
+  position: relative;
+  padding: 10px;
+}
+
+/* ---- Divisor: linha — título — linha ------------------------------------ */
+.plans-head__divider {
+  display: flex;
+  align-items: center;
+  width: 700px;
+  margin: 0 auto 20px;              /* 20px = espaço até o subtítulo */
+  padding-block: 2px;
+  text-align: center;
+}
+
+.plans-head__divider::before,
+.plans-head__divider::after {
+  content: "";
+  display: block;
+  flex-grow: 1;
+  border-top: 4px solid var(--c-ink);
+}
+
+.plans-head__title {
+  flex-shrink: 0;
+  max-width: 95%;                   /* garante que as linhas nunca zerem */
+  margin: 0 27px;                   /* respiro entre título e linhas */
+  font-family: var(--ff-display);
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1.3em;
+  color: var(--c-ink);
+}
+
+/* ---- Subtítulo ---------------------------------------------------------- */
+.plans-head__subtitle {
+  /* 40px do bloco + 20px de espaço entre blocos. É padding (e não margin)
+     para não colapsar no mobile, onde o container perde o padding vertical. */
+  padding-bottom: 60px;
+  font-family: var(--ff-body);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6em;
+  color: var(--c-gray-600);
+  text-align: center;
+}
+
+/* ---- Pontinhos decorativos ---------------------------------------------
+   No original cada imagem mora numa caixa de 35px/30px posicionada em
+   (left, top) e fica centrada dentro dela; aqui a imagem é posicionada
+   direto, com a centragem já embutida nos valores.
+   Caixas originais: a = 35px em 1095px/21px · b = 30px em -112px/177px ·
+   c = 30px em 1314px/209px. Os valores negativos/acima de 1240px são de
+   propósito: os pontos ficam fora do container, e em telas estreitas o
+   overflow-x:hidden do body os esconde.
+   ------------------------------------------------------------------------ */
+.plans-head__dot {
+  position: absolute;
+  filter: invert(1);                /* o PNG é escuro; invertido fica claro */
+}
+
+.plans-head__dot--a { top: 28.8px;  left: 1106.5px; width: 12px; }
+.plans-head__dot--b { top: 181.3px; left: -106.5px; width: 19px; }
+.plans-head__dot--c { top: 213.3px; left: 1319.5px; width: 19px; }
+
+/* ==========================================================================
+   Responsivo
+   ========================================================================== */
+
+@media (max-width: 767px) {
+  .plans-head {
+    z-index: 1;
+    padding: 60px 0 210px;
+  }
+
+  .plans-head__inner { padding: 0 28px; }
+
+  .plans-head__divider { width: 264px; }
+
+  /* Tipografia global do tema cai no mobile (Kanit 40→20, Montserrat 18→15) */
+  .plans-head__title { font-size: 20px; }
+
+  .plans-head__subtitle { font-size: 15px; }
+}
+
+/* ===== 03-planos-cards ===== */
+/* ==========================================================================
+   VCuida — 03 · Planos (cards)
+   Valores literais vindos do CSS do Elementor dessa seção.
+   ========================================================================== */
+
+/* O margin-top negativo puxa os cards para cima da faixa cinza da seção
+   anterior; z-index (com position:relative) mantém os cards por cima dela. */
+.planos-cards {
+  position: relative;
+  z-index: 101;
+  margin-top: -240px;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+/* 1196px = largura do container original. O gap de 20px e o padding lateral
+   de 10px reproduzem a margem de 10px que cada coluna tinha no Elementor. */
+.planos-cards__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: stretch;          /* os três cards ficam da mesma altura */
+  gap: 20px;
+  width: 100%;
+  max-width: 1196px;
+  margin-inline: auto;
+  padding-inline: 10px;
+}
+
+/* ---- Card --------------------------------------------------------------- */
+
+.plano {
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  background-color: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: 16px;
+  /* o lift é 500ms linear (CSS custom do site); a sombra usa os 0.3s do tema */
+  transition: transform 500ms linear, box-shadow 0.3s;
+}
+
+.plano:hover {
+  transform: translateY(-30px);
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.13);
+}
+
+/* ---- Cabeçalho colorido ------------------------------------------------- */
+
+.plano__name {
+  margin-bottom: 20px;
+  padding: 18px 24px;
+  border-radius: 8px;
+  text-align: center;
+  font-family: var(--ff-display);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1em;
+}
+
+.plano--total .plano__name {
+  background-color: transparent;
+  background-image: var(--g-brand);
+  color: var(--c-white);
+  line-height: 1.2em;
+}
+
+.plano--mental .plano__name {
+  background-color: #FFF1E8;
+  color: #EA5B0C;
+}
+
+.plano--essencial .plano__name {
+  background-color: #F7E6F7;
+  color: #9E2380;
+}
+
+/* ---- Preço -------------------------------------------------------------- */
+
+.plano__price {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--ff-display);
+  line-height: 1;                /* headings do Elementor não têm entrelinha */
+}
+
+.plano__currency {
+  padding-right: 4px;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--c-gray-600);
+}
+
+/* o -5px sobe o número grande em relação ao centro da linha do preço */
+.plano__amount {
+  margin: -5px 2px 0 0;
+  font-size: 52px;
+  font-weight: 500;
+  color: var(--c-gray-600);
+}
+
+.plano__cents {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--c-gray-600);
+}
+
+.plano__period {
+  padding-left: 4px;
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--c-gray-500);
+}
+
+/* ---- Botão -------------------------------------------------------------- */
+
+.plano__cta-wrap {
+  margin-block: 20px;
+  text-align: center;
+}
+
+.plano__cta {
+  display: inline-block;
+  padding: 12px 26px;
+  font-family: var(--ff-body);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  color: var(--c-white);
+  background-color: var(--c-green-dark);
+  border: 6px solid var(--c-white);
+  border-radius: 100px;
+  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.16);
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.plano__cta:hover,
+.plano__cta:focus {
+  color: var(--c-white);
+  background-color: #069C60;
+  border-color: var(--c-green-dark);
+}
+
+/* ---- Divisor ------------------------------------------------------------ */
+
+.plano__divider {
+  margin: 15px 0;
+  border: 0;
+  border-top: 1px solid var(--c-line);
+}
+
+/* ---- Lista de benefícios ------------------------------------------------ */
+
+.plano__features {
+  margin-top: 20px;
+}
+
+/* nos cards 2 e 3 a lista é mais estreita que o card */
+.plano--mental .plano__features,
+.plano--essencial .plano__features {
+  padding-right: 48px;
+}
+
+.plano__feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 8.5px;                    /* 3.5px do ícone + 5px do texto (padrão Elementor) */
+}
+
+.plano__feature .icon {
+  position: relative;
+  top: 5px;                      /* alinha o check com a 1ª linha do texto */
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  fill: var(--c-green);
+}
+
+.plano__feature-text {
+  font-family: var(--ff-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6em;
+  color: var(--c-gray-600);
+}
+
+/* ==========================================================================
+   Responsivo
+   ========================================================================== */
+
+@media (max-width: 767px) {
+  .planos-cards {
+    z-index: 10;
+    padding: 0 28px;
+  }
+
+  /* empilha: as margens laterais dos cards desaparecem e o espaçamento
+     vertical passa a vir do margin-bottom de cada card (inclusive o último) */
+  .planos-cards__grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding-inline: 0;
+  }
+
+  .plano {
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s;  /* sem lift onde não existe hover de mouse */
+  }
+
+  .plano:hover {
+    transform: none;
+  }
+
+  /* A tipografia desta seção vem das variáveis globais do kit do Elementor,
+     que trocam de valor no breakpoint mobile. O spec só traz o valor já
+     resolvido no desktop, então os tamanhos abaixo foram medidos no site:
+     cabeçalho 16px/1.2em nos TRÊS cards (não só nos cards 2 e 3). */
+  .plano__name {
+    font-size: 16px;
+    line-height: 1.2em;
+  }
+
+  /* nos cards 2 e 3 o padding do cabeçalho também cai de 18px 24px para 18px */
+  .plano--mental .plano__name,
+  .plano--essencial .plano__name {
+    padding: 18px;
+  }
+
+  /* lista: 14px/1.7em no mobile (também vem da variável global do kit) */
+  .plano__feature-text {
+    font-size: 14px;
+    line-height: 1.7em;
+  }
+
+  .plano--mental .plano__features,
+  .plano--essencial .plano__features {
+    width: 95%;
+    margin-inline: auto;
+    padding-right: 4px;
+  }
+}
+
+/* ===== 04-benef-header ===== */
+/* ==========================================================================
+   04 — Facilidades e Benefícios (cabeçalho da seção)
+   Valores extraídos de spec2/04-benef-header.css (fonte da verdade).
+   ========================================================================== */
+
+.benefits-head {
+  background-color: var(--c-white);
+  padding: 84px 80px 0 80px;
+}
+
+.benefits-head__inner {
+  /* 10px: gap padrão de coluna do Elementor
+     (.elementor-column-gap-default > .elementor-column > .elementor-element-populated).
+     A coluna desta seção não tem override, então o padding vale nos 3 breakpoints. */
+  padding: var(--gutter);
+}
+
+.benefits-head__title {
+  /* 18px é a margem do widget-container original, não do heading;
+     somada ao padding de 10px da coluna dá 28px abaixo do título. */
+  margin: 0 0 18px 0;
+  font-family: var(--ff-display);
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1.3em;
+  color: var(--c-ink);
+  text-align: center;
+}
+
+/* ---- Breakpoints -------------------------------------------------------- */
+/* Em <=1024px o spec repete font-size:40px / line-height:1.3em: idêntico ao
+   desktop, por isso não há media query de 1024px aqui. */
+
+@media (max-width: 767px) {
+  .benefits-head {
+    padding: 40px 0 0 0;
+  }
+
+  /* No kit do Elementor este título usa uma tipografia global que encolhe
+     de 40px para 20px abaixo de 767px (a entrelinha de 1.3em continua). */
+  .benefits-head__title {
+    font-size: 20px;
+  }
+}
+
+/* ===== 05-benef-grid ===== */
+/* ==========================================================================
+   05 — Facilidades e Benefícios: grade de 10 cards
+   As bordas de 1px de cards vizinhos se somam e formam as linhas internas
+   da "tabela", exatamente como no original (cada coluna tinha borda completa).
+   ========================================================================== */
+
+.benefits-grid {
+  --benef-line: #EFE9F2;                 /* borda fina dos cards                   */
+  background-color: var(--c-white);
+  border-radius: 24px;
+  overflow: hidden;
+  padding: 0 80px 88px 80px;
+}
+
+.benefits-grid__inner {
+  /* 10px: gap padrão de coluna do Elementor
+     (.elementor-column-gap-default > .elementor-column > .elementor-element-populated).
+     É o que separa a grade da borda da seção e soma 98px ao rodapé da seção. */
+  padding: var(--gutter);
+}
+
+.benefits-grid__list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+.benefits-grid__item {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: start;
+  padding: 30px 26px 32px 26px;
+  background-color: var(--c-white);
+  border: 1px solid var(--benef-line);
+}
+
+/* Só os dois cantos extremos da grade são arredondados */
+.benefits-grid__item:first-child { border-radius: 20px 0 0 0; }
+.benefits-grid__item:last-child  { border-radius: 0 0 20px 0; }
+
+/* Os dois últimos cards valiam 50% da linha = 2 das 4 colunas */
+.benefits-grid__item--wide { grid-column: span 2; }
+
+/* ---- Ícone ------------------------------------------------------------- */
+.benefits-grid__icon {
+  /* flex-start impede o quadrado colorido de esticar na largura do card */
+  align-self: flex-start;
+  padding: 12px;
+  border-radius: 16px;
+  font-size: 26px;
+  line-height: 1;
+  background-color: var(--benef-icon-bg);
+  color: var(--benef-icon-fg);
+}
+
+.benefits-grid__icon .icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
+.benefits-grid__icon--telemedicina { --benef-icon-bg: #FDEAF0; --benef-icon-fg: #D51A2C; }
+.benefits-grid__icon--orientacao   { --benef-icon-bg: #FDEAF0; --benef-icon-fg: #C71E3F; }
+.benefits-grid__icon--mental       { --benef-icon-bg: #FBE7F2; --benef-icon-fg: #B01A66; }
+.benefits-grid__icon--nutricao     { --benef-icon-bg: #F7E6F7; --benef-icon-fg: #9E2380; }
+.benefits-grid__icon--medicamentos { --benef-icon-bg: #F3E8FA; --benef-icon-fg: #8A2A96; }
+.benefits-grid__icon--agendamento  { --benef-icon-bg: #EEE9FB; --benef-icon-fg: #7B2C9E; }
+.benefits-grid__icon--digital      { --benef-icon-bg: #E9EDFC; --benef-icon-fg: #3A4FA8; }
+.benefits-grid__icon--abrangencia  { --benef-icon-bg: #E3F3FB; --benef-icon-fg: #1E7FA8; }
+.benefits-grid__icon--cuidado      { --benef-icon-bg: #FFF1E8; --benef-icon-fg: #EA5B0C; }
+.benefits-grid__icon--empresas     { --benef-icon-bg: rgba(255,255,255,0.18); --benef-icon-fg: var(--c-white); }
+
+/* ---- Textos ------------------------------------------------------------ */
+.benefits-grid__title {
+  /* 8px no topo: o h3 do tema original mantém a margem superior padrão dentro
+     do bloco de texto (o reset do base.css zera h3, então é preciso repor).
+     Confere com o site: title.marginTop = 8px em todos os 10 cards. */
+  margin-block-start: 8px;
+  margin-block-end: 7px;
+  font-family: var(--ff-display);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.2em;
+  color: var(--c-ink);
+}
+
+.benefits-grid__desc {
+  font-family: var(--ff-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6em;
+  color: var(--c-ink-soft);
+}
+
+/* O original só aplica balance nos 8 cards estreitos */
+.benefits-grid__item:not(.benefits-grid__item--wide) .benefits-grid__desc {
+  text-wrap: balance;
+}
+
+/* ---- Card em gradiente ------------------------------------------------- */
+.benefits-grid__item--featured {
+  background-color: transparent;
+  background-image: var(--g-brand);
+  border-color: #B01A66;
+}
+
+.benefits-grid__item--featured .benefits-grid__title { color: var(--c-white); }
+.benefits-grid__item--featured .benefits-grid__desc  { color: #FBE6EE; }
+
+/* ---- Breakpoints ------------------------------------------------------- */
+/* Em <=1024px os presets de tipografia do original ainda valem 20px/1.2em e
+   15px/1.6em (conferido no site em 900px), idênticos ao desktop — por isso não
+   existe media query de 1024px aqui. */
+
+@media (max-width: 767px) {
+  .benefits-grid {
+    padding: 0 28px 0 28px;
+  }
+
+  .benefits-grid__list {
+    grid-template-columns: 1fr;
+  }
+
+  .benefits-grid__item--wide {
+    grid-column: auto;
+  }
+
+  /* Empilhado, os cantos arredondados passam a ser os do topo e da base */
+  .benefits-grid__item:first-child { border-radius: 20px 20px 0 0; }
+  .benefits-grid__item:last-child  { border-radius: 0 0 20px 20px; }
+
+  /* Tipografia responsiva: no original o título e a descrição usam presets
+     globais de tipografia do Elementor, que têm valor próprio no mobile
+     (16px/1.2em e 14px/1.7em). O dump do spec repetiu os valores de desktop
+     nesta media query, mas o site renderiza 16px/19.2px e 14px/23.8px. */
+  .benefits-grid__title { font-size: 16px; }
+
+  .benefits-grid__desc {
+    font-size: 14px;
+    line-height: 1.7em;
+  }
+}
+
+/* ===== 06-cta ===== */
+/* ==========================================================================
+   06 — CTA  "Quer saber mais sobre a Vcuida e seus benefícios?"
+   Valores extraidos de spec2/06-cta.css (fonte da verdade).
+   ========================================================================== */
+
+.cta {
+  padding: 0 0 60px;
+}
+
+.cta__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* coluna do Elementor: align-items/align-content center */
+  justify-content: center;
+  padding: var(--gutter);   /* 10px: gap padrao de coluna do Elementor (zerado <=767) */
+}
+
+.cta__lead {
+  padding-top: 60px;
+  margin-bottom: 20px;      /* espacamento padrao entre widgets do Elementor */
+  font-family: var(--ff-body);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6em;
+  color: var(--c-footer-navy);
+  text-align: center;
+}
+
+.cta__button {
+  display: inline-block;
+  /* o widget HTML vazio que fechava a coluna no original deixava
+     mais um espacamento de widget (20px) abaixo do botao */
+  margin-bottom: 20px;
+  padding: 16px 48px;
+  border: 6px solid var(--c-white);
+  border-radius: 100px;
+  background-color: #00B4CF;
+  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.16);
+  font-family: var(--ff-body);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;           /* a altura do botao vem do padding, nao da entrelinha */
+  color: var(--c-white);
+  text-align: center;
+  transition: background-color .3s, border-color .3s, color .3s;
+}
+
+.cta__button:hover,
+.cta__button:focus {
+  background-color: #0190A5;
+  border-color: var(--c-cyan);
+  color: var(--c-white);
+}
+
+/* ==========================================================================
+   Breakpoints
+   ========================================================================== */
+
+/* <=1024px: o spec so repete font-size:18px / line-height:1.6em,
+   identicos ao desktop — nada a sobrescrever. */
+
+@media (max-width: 767px) {
+  .cta {
+    padding: 0 28px 60px;
+  }
+
+  /* coluna com margin/padding zerados no original */
+  .cta__inner {
+    padding: 0;
+  }
+
+  .cta__lead {
+    width: 198px;
+    max-width: 198px;
+    padding-top: 40px;
+    padding-bottom: 20px;
+    margin-bottom: 0;
+    /* 15px, nao 18px: o texto usa o preset de tipografia global do Elementor
+       (856ad0d), que o kit reduz para 15px em <=767. O arquivo de spec traz
+       18px porque resolveu a variavel com o valor de desktop. Medido em
+       producao: 15px/24px, caixa de texto com 48px (2 linhas). */
+    font-size: 15px;
+  }
+
+  .cta__button {
+    margin-bottom: 0;
+    font-size: 14px;
+  }
+}
+
+/* ===== 07-footer ===== */
+/* ==========================================================================
+   07 — Rodapé
+   Fundo #03262D + BG-Blue.webp, "um produto", logo Vallora, contatos e
+   link da política de privacidade. Tudo centralizado.
+   ========================================================================== */
+
+.footer {
+  background-color: var(--c-footer-navy);
+  /* caminho relativo ao arquivo CSS (build/ -> assets/img/) */
+  background-image: url("../img/BG-Blue.webp");
+  background-position: center center;
+  background-size: cover;
+}
+
+.footer__inner {
+  padding: 100px 0;
+  text-align: center;
+}
+
+/* ---- "um produto" ------------------------------------------------------- */
+.footer__kicker {
+  /* 16px vinha do padding do widget-container original */
+  padding-bottom: 16px;
+  font-family: var(--ff-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6em;
+  color: var(--c-white);
+}
+
+/* ---- Logo Vallora ------------------------------------------------------- */
+.footer__logo {
+  width: 239px;
+  height: auto;
+  margin: 0 auto 16px;
+}
+
+/* ---- Contatos ----------------------------------------------------------- */
+/* Desktop (>1024px): lista em linha, 20px entre os itens.
+   Abaixo disso o original troca para uma segunda lista empilhada. */
+.footer__contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding-bottom: 16px;
+}
+
+.footer__contact-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 9,5px = 4,5px de margem do <svg> + 5px de padding do texto no icon-list */
+  gap: 9.5px;
+  width: 100%;
+  font-family: var(--ff-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6em;
+}
+
+.footer__icon {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  fill: var(--c-white);
+}
+
+.footer__contact-label {
+  color: var(--c-white);
+  transition: color 0.3s;
+}
+
+/* No original só o texto muda de cor no hover; o ícone fica branco. */
+.footer__contact-link:hover .footer__contact-label {
+  color: var(--c-cyan);
+}
+
+/* ---- Política de privacidade -------------------------------------------- */
+.footer__legal {
+  font-family: var(--ff-body);
+  font-size: 14px;
+  font-weight: 500;
+  /* o spec não define line-height aqui no desktop: vale o padrão do heading
+     do Elementor (1), ou seja 14px de altura de linha */
+  line-height: 1;
+  color: var(--c-white);
+}
+
+.footer__legal a:hover {
+  text-decoration: underline;
+}
+
+/* ---- Breakpoints -------------------------------------------------------- */
+/* Em <=1024px o spec repete font-size:15px / line-height:1.6em do desktop
+   para textos e contatos: só o layout da lista muda. */
+
+@media (max-width: 1024px) {
+  .footer__contact {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .footer {
+    padding: 0 20px;
+  }
+
+  .footer__contact {
+    gap: 12px;
+  }
+
+  /* A tipografia global usada aqui encolhe de 15px/1.6em para 14px/1.7em
+     abaixo de 767px. */
+  .footer__kicker,
+  .footer__contact-link {
+    font-size: 14px;
+    line-height: 1.7em;
+  }
+
+  .footer__legal {
+    padding: 10px 0 16px;
+    line-height: 1.6em;
+  }
+}
