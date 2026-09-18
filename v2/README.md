@@ -118,6 +118,55 @@ Dois detalhes que custaram bug antes de ficarem certos:
 Para tirar a animação de um bloco, apague o `data-anim` dele no `index.html`. Para mudar
 duração ou distância, o bloco fica no fim do `assets/css/base.css`.
 
+## Âncoras: a chegada tem de estar pronta
+
+Clicar em "Planos" levava a uma cena montando na frente de quem chegou. A primeira
+tentativa de correção preparava os `[data-anim]` **descendentes da seção-alvo** — e isso
+só resolveu metade, porque o que preenche a tela na chegada não é o que está dentro do alvo:
+
+- `#planos` é a `<section class="plans-head">` e contém só o título e o subtítulo. Os **três
+  cards de preço** vivem na seção irmã `.planos-cards`, puxada 240px para cima por
+  `margin-top: -240px` — eles aterrissam na tela sem serem descendentes do alvo.
+- `#contato` é o rodapé, mas a rolagem bate no fim do documento **529px antes** de alcançá-lo,
+  deixando o bloco de CTA na tela.
+
+Medido antes da correção: ao parar a rolagem em `#planos`, os cards ainda estavam deslocados
+9 / 14 / 19px e só assentavam 500ms depois, a 254–313px do topo da tela.
+
+A função passou a preparar **o que vai estar na tela quando a rolagem parar**, e não o que
+está dentro do alvo. Isso exige três coisas que não são óbvias:
+
+1. `Math.min(topo, scrollHeight - alturaTela)` — onde o navegador realmente para, que nem
+   sempre é onde o alvo está (caso do `#contato`).
+2. Descontar o `scroll-margin-top`: com header fixo o navegador para 83px acima do topo da
+   seção, então a faixa logo acima também aterrissa na tela.
+3. Varrer todos os `[data-anim]`, não só os pendentes — um elemento já revelado pode estar
+   no meio da transição de 650ms e também precisa ser travado.
+
+Verificado: **zero elementos com `opacity < 1` ou deslocados** no instante da chegada, nas
+três âncoras, em desktop e mobile.
+
+### Três defeitos vizinhos, encontrados junto
+
+- **Os cards de plano e o botão do CTA não animavam: estalavam.** Eles declaram o próprio
+  `transition` em `sections.css`, com a mesma especificidade do `[data-anim]` de `base.css` —
+  e como `sections.css` carrega depois, ganhava e apagava a transição de entrada. Agora
+  `opacity` entra na lista de cada um. No card do desktop só `opacity`: `transform` já está
+  lá por causa do lift, e repetir faria a última declaração vencer, trocando os 500ms
+  lineares do hover pelos 650ms da entrada.
+- **O atraso do escalonamento vazava para o hover.** `.plano--total[data-anim]` é mais
+  específico que `.plano`, e o `transition-delay` vale para a lista inteira: o lift do
+  terceiro card só começava 240ms depois do ponteiro chegar. O atributo `data-anim` agora é
+  removido 1200ms após a entrada — depois disso ele não serve mais para nada.
+- **`Esc` com o menu fechado jogava a página ao topo.** O handler chamava `burger.focus()`
+  sem verificar se havia algo aberto: quem estivesse navegando por teclado no meio do
+  conteúdo perdia 2900px de posição e o foco. Agora ele sai cedo se o menu já está fechado.
+
+Em movimento reduzido o `transition: none` saiu: naquele modo não existe entrada para cortar,
+e ele atingia também as transições de interação — o card teleportava 30px sob o cursor em vez
+de simplesmente não se mexer. O lift agora é suprimido de propósito nesse modo, e a sombra
+continua dando o retorno de hover.
+
 ## Rolagem horizontal fantasma (corrigido)
 
 Os pontinhos decorativos da seção de planos ficam de propósito fora do container e chegavam

@@ -160,10 +160,13 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 /* Quem pediu menos movimento no sistema não recebe nenhum. Não é enfeite:
    movimento de entrada dispara enjoo em quem tem distúrbio vestibular. */
 @media (prefers-reduced-motion: reduce) {
+  /* Sem transition:none aqui. Neste modo opacity e transform já nascem no
+     estado final, então não há entrada para cortar — e o transition:none
+     atingia também as transições de interação do componente (o lift do card
+     teleportava 30px sob o cursor em vez de simplesmente não existir). */
   .js-anim [data-anim],
-  .js-anim .hero__mockup[data-anim] {
+  .js-anim .hero__mockup[data-anim]:not(.is-visivel) {
     opacity: 1;
     transform: none;
-    transition: none;
   }
 }
