@@ -50,7 +50,14 @@
 
 html { -webkit-text-size-adjust: 100%; }
 
-html, body { overflow-x: hidden; }
+/* clip, e NÃO hidden.
+   `overflow-x: hidden` transforma o elemento num contêiner de rolagem, e isso
+   quebra `position: sticky` em qualquer descendente — o header era declarado
+   sticky e simplesmente descia junto com a página.
+   `clip` corta igual, sem criar contêiner de rolagem, então o sticky funciona.
+   Isto aqui é só uma rede: a origem do estouro (os pontinhos decorativos da
+   seção de planos) já é cortada na própria .plans-head. */
+html, body { overflow-x: clip; }
 
 body {
   margin: 0;

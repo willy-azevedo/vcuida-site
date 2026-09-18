@@ -179,6 +179,14 @@ A correção é `overflow: hidden` na própria `.plans-head`, que é full-bleed 
 exatamente na borda da tela, igual ao que já se via, e o `body.scrollWidth` volta a ser
 igual ao `clientWidth`. Vale para os três breakpoints.
 
+**E o `overflow-x` do `html, body` virou `clip`.** Isso não é preciosismo: `overflow-x: hidden`
+transforma o elemento num contêiner de rolagem, e um contêiner de rolagem **quebra
+`position: sticky` em qualquer descendente**. O header estava declarado `sticky`, o
+`getComputedStyle` devolvia `sticky`, e ele descia junto com a página assim mesmo — medido,
+`headerTop: -1200` com a página em 1200. `overflow-x: clip` corta igual sem criar contêiner
+de rolagem, e o sticky passa a funcionar. Com a origem do estouro já resolvida na
+`.plans-head`, o `clip` ficou só como rede de segurança.
+
 ## Estrutura
 
 ```
