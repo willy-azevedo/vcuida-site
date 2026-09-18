@@ -18,6 +18,9 @@
 <link rel="apple-touch-icon" href="assets/img/cropped-v-1-1-1-180x180.webp">
 
 <link rel="preload" as="image" href="assets/img/iPhone-Vcuida.webp" fetchpriority="high">
+<!-- Marca o documento antes da 1a pintura: o estado inicial das animações só
+     existe quando há JS, então sem script a página aparece normal. -->
+<script>document.documentElement.classList.add("js-anim")</script>
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/sections.css">
@@ -63,16 +66,16 @@
       <div class="container hero__inner">
         <div class="hero__copy">
   
-          <h1 class="hero__title"><span class="hero__title-em">Saúde</span> para quem faz a <span class="hero__title-em">sua empresa</span> acontecer</h1>
+          <h1 class="hero__title" data-anim><span class="hero__title-em">Saúde</span> para quem faz a <span class="hero__title-em">sua empresa</span> acontecer</h1>
   
-          <p class="hero__subtitle">Telemedicina, consultas online e muito mais em um clique.</p>
+          <p class="hero__subtitle" data-anim>Telemedicina, consultas online e muito mais em um clique.</p>
   
         </div>
   
         <!-- o <figure> existe porque o iPhone é mais largo que a coluna (margem
              negativa) e a imagem mede 80% dessa largura maior, não da coluna -->
         <div class="hero__media">
-          <figure class="hero__mockup">
+          <figure class="hero__mockup" data-anim>
             <img src="assets/img/iPhone-Vcuida.webp" width="800" height="990" fetchpriority="high" decoding="async" alt="Aplicativo VCuida aberto na tela de um iPhone">
           </figure>
         </div>
@@ -99,7 +102,7 @@
   
         <!-- Grade: as bordas de 1px de cards vizinhos se somam e formam
              as linhas internas da "tabela", como na grade da v1. -->
-        <ul class="about__grid">
+        <ul class="about__grid" data-anim>
   
           <li class="about__item">
             <span class="about__icon about__icon--telemedicina">
@@ -163,7 +166,7 @@
   
         </ul>
   
-        <div class="about__copy">
+        <div class="about__copy" data-anim>
           <p class="about__lead">VCuida é o benefício de saúde e bem-estar para empresas que levam o cuidado ao colaborador a sério.</p>
           <p class="about__para"><strong>Teleconsultas</strong> médicas com os melhores médicos de diversas especialidades, <strong>psicólogos e nutricionistas</strong>, além de <strong>desconto em exames, consultas presenciais e medicamentos</strong>.</p>
           <p class="about__para">Quer um time mais engajado?<br><strong>Ofereça VCuida.</strong></p>
@@ -182,12 +185,12 @@
     
         <!-- Divisor: as linhas à esquerda e à direita são os ::before/::after -->
         <div class="plans-head__divider">
-          <h2 class="plans-head__title">Escolha seu plano</h2>
+          <h2 class="plans-head__title" data-anim>Escolha seu plano</h2>
         </div>
     
         <!-- v2: o subtítulo passou a ter duas linhas; a quebra é fixa no desktop
              e no mobile cada frase reflui sozinha -->
-        <p class="plans-head__subtitle">Selecione o plano que melhor atende a sua equipe e fale com nossos especialistas.<br>Todos os planos com opção individual ou família para até 3 dependentes.</p>
+        <p class="plans-head__subtitle" data-anim>Selecione o plano que melhor atende a sua equipe e fale com nossos especialistas.<br>Todos os planos com opção individual ou família para até 3 dependentes.</p>
     
         <!-- Pontinhos decorativos (no original têm parallax por JS; aqui ficam fixos) -->
         <img class="plans-head__dot plans-head__dot--a" src="assets/img/Vector-32.png" width="19" height="19" alt="">
@@ -205,7 +208,7 @@
     <section class="planos-cards" aria-label="Planos">
       <div class="planos-cards__grid">
   
-        <article class="plano plano--mental">
+        <article class="plano plano--mental" data-anim>
           <h3 class="plano__name">VCUIDA MENTAL</h3>
   
           <p class="plano__from">A partir de</p>
@@ -228,7 +231,7 @@
           </p>
         </article>
   
-        <article class="plano plano--essencial">
+        <article class="plano plano--essencial" data-anim>
           <h3 class="plano__name">VCUIDA ESSENCIAL</h3>
   
           <p class="plano__from">A partir de</p>
@@ -255,7 +258,7 @@
           </p>
         </article>
   
-        <article class="plano plano--total">
+        <article class="plano plano--total" data-anim>
           <h3 class="plano__name">VCUIDA TOTAL</h3>
   
           <p class="plano__from">A partir de</p>
@@ -309,9 +312,9 @@
     <!-- destino alterado a pedido do cliente: agora vai para o mesmo WhatsApp do "CONTRATE AGORA" -->
     <section class="cta">
       <div class="container cta__inner">
-        <p class="cta__lead">Quer saber mais sobre a Vcuida e seus benefícios?</p>
+        <p class="cta__lead" data-anim>Quer saber mais sobre a Vcuida e seus benefícios?</p>
   
-        <a class="cta__button" href="https://wa.me/5548991364002?text=Oi.%20Gostaria%20de%20saber%20mais%20sobre%20o%20VCuida%20para%20empresa." target="_blank" rel="noopener">Clique aqui e saiba mais</a>
+        <a class="cta__button" data-anim href="https://wa.me/5548991364002?text=Oi.%20Gostaria%20de%20saber%20mais%20sobre%20o%20VCuida%20para%20empresa." target="_blank" rel="noopener">Clique aqui e saiba mais</a>
       </div>
     </section>
 
@@ -321,7 +324,7 @@
     <footer class="footer" id="contato">
       <div class="container footer__inner">
   
-        <div class="footer__cols">
+        <div class="footer__cols" data-anim>
   
           <!-- 1 · marca -->
           <div class="footer__block footer__block--brand">
@@ -387,7 +390,7 @@
   
         </div>
   
-        <p class="footer__legal">
+        <p class="footer__legal" data-anim>
           <a href="https://vcuida.com.br/politica-de-privacidade-e-protecao-de-dados-pessoais/">Politica de privacidade e dados pessoais</a>
         </p>
   
@@ -428,6 +431,75 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') { abrir(false); burger.focus(); }
   });
+})();
+
+/* Animações de entrada: revela cada [data-anim] quando ele entra na tela.
+
+   Nada de IntersectionObserver aqui, de propósito. O padrão comum (esconder
+   tudo no CSS e revelar no callback do observer) tem um modo de falha ruim:
+   se o observer não dispara, a página inteira fica em branco — e ele não
+   dispara, por exemplo, quando o documento está sendo renderizado fora da
+   tela. Um efeito visual não pode derrubar o conteúdo.
+
+   Com um teste de posição rodando no scroll, o pior caso é o elemento
+   aparecer sem animação. O trabalho é ínfimo: uma medição por elemento, só
+   enquanto ainda há elemento por revelar, e no máximo 10 vezes por segundo.
+   Quando o último entra, os listeners saem e nada mais roda. */
+(function () {
+  var alvos = [].slice.call(document.querySelectorAll('[data-anim]'));
+  if (!alvos.length) return;
+
+  function revelar(el) { el.classList.add('is-visivel'); }
+
+  /* Movimento reduzido: mostra tudo de uma vez e não instala nada. */
+  if (window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    alvos.forEach(revelar);
+    return;
+  }
+
+  var agendado = false;
+
+  function conferir() {
+    agendado = false;
+    var alturaTela = window.innerHeight || document.documentElement.clientHeight;
+    var doc = document.documentElement;
+
+    /* No meio da página o elemento só entra depois de passar 10% da dobra,
+       senão ele "aparece" ainda colado na borda e o efeito se perde. No fim
+       da página esse desconto sai: quem está nos últimos pixels nunca chegaria
+       a cruzar o limite, porque a rolagem acaba antes. */
+    var noFim = alturaTela + window.pageYOffset >= doc.scrollHeight - 2;
+    var limite = noFim ? alturaTela : alturaTela * 0.9;
+
+    /* Basta o topo ter cruzado o limite. Sem o teste de "ainda está na tela":
+       num salto de rolagem (o menu leva para #planos, por exemplo) as seções
+       do meio passam entre duas medições, e testar se continuam visíveis as
+       deixaria escondidas para sempre. */
+    alvos = alvos.filter(function (el) {
+      if (el.getBoundingClientRect().top < limite) { revelar(el); return false; }
+      return true;
+    });
+
+    if (!alvos.length) {
+      window.removeEventListener('scroll', agendar);
+      window.removeEventListener('resize', agendar);
+    }
+  }
+
+  /* Acelerador por tempo, e não por requestAnimationFrame: o rAF só roda
+     quando a aba está sendo desenhada, o que torna o comportamento impossível
+     de testar fora da tela e dependente de pintura. 100ms é bem abaixo do que
+     se percebe e limita o trabalho a 10 medições por segundo no pior caso. */
+  function agendar() {
+    if (agendado) return;
+    agendado = true;
+    setTimeout(conferir, 100);
+  }
+
+  window.addEventListener('scroll', agendar, { passive: true });
+  window.addEventListener('resize', agendar);
+  conferir();
 })();
 </script>
 </body>

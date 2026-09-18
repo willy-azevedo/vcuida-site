@@ -4,8 +4,8 @@ Segunda versão da home, com as alterações do PPTX **"ajuste pagina VCuida"**.
 Duplicata independente da v1: tem o próprio `index.html` e a própria pasta `assets/`.
 A v1, em `../index.html`, **não foi tocada**.
 
-Sem build e sem dependência. O único JavaScript da página são ~20 linhas inline que
-abrem e fecham o menu no mobile (ver "Menu mobile" abaixo).
+Sem build e sem dependência. Todo o JavaScript da página é inline: o menu do mobile
+e as animações de entrada (ver as seções abaixo).
 
 ## O que mudou em relação à v1
 
@@ -67,6 +67,42 @@ Abaixo de 767px o menu deixa de ser uma segunda linha de links e vira um hambúr
 o mesmo visual sem script, mas nenhum dos dois fecha o painel quando a pessoa escolhe um
 item — o menu ficaria aberto por cima do conteúdo depois do clique. São 20 linhas inline,
 sem dependência e sem requisição extra. O resto da página continua sem script.
+
+## Animações de entrada
+
+Cada bloco marcado com `data-anim` nasce 22px abaixo e transparente, e sobe ao entrar na
+tela. São 14 no total: título, subtítulo e mockup do hero (escalonados em 100ms), a grade
+e o texto da 2ª dobra, o título e o subtítulo dos planos, os três cards (escalonados em
+120ms), o CTA e os dois blocos do rodapé.
+
+Só `opacity` e `transform`, que o navegador compõe sem recalcular layout — a altura da
+página é a mesma com e sem animação (2977px no desktop).
+
+**Três travas, e cada uma existe por um motivo:**
+
+1. **Sem JavaScript, nada some.** A regra que esconde depende de `.js-anim` no `<html>`,
+   colocada por um script no `<head>` antes da primeira pintura. Sem script, a classe não
+   entra e a página aparece inteira.
+2. **`prefers-reduced-motion: reduce` desliga tudo.** Não é enfeite: movimento de entrada
+   dispara enjoo em quem tem distúrbio vestibular.
+3. **Nada de `IntersectionObserver`.** O padrão comum — esconder no CSS e revelar no
+   callback do observer — tem um modo de falha ruim: se o observer não dispara, a página
+   fica em branco. E ele não dispara quando o documento não está sendo desenhado (foi
+   exatamente o que aconteceu ao testar com o painel oculto: zero de 14 revelados). Aqui a
+   revelação é um teste de posição no evento de scroll, acelerado por tempo e não por
+   `requestAnimationFrame` — que também só roda quando há pintura. O pior caso passa a ser
+   o elemento aparecer sem animação, nunca não aparecer.
+
+Dois detalhes que custaram bug antes de ficarem certos:
+
+- O teste é só `topo < limite`, sem checar se o elemento **continua** na tela. Num salto de
+  rolagem — o menu leva para `#planos` — as seções do meio passam entre duas medições, e
+  exigir que ainda estivessem visíveis as deixava escondidas para sempre.
+- No fim da página o desconto de 10% da dobra sai. Com ele, quem está nos últimos pixels
+  nunca cruzaria o limite, porque a rolagem acaba antes.
+
+Para tirar a animação de um bloco, apague o `data-anim` dele no `index.html`. Para mudar
+duração ou distância, o bloco fica no fim do `assets/css/base.css`.
 
 ## Rolagem horizontal fantasma (corrigido)
 

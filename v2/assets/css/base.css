@@ -90,3 +90,56 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   white-space: nowrap;
   border: 0;
 }
+
+/* ==========================================================================
+   Animações de entrada
+   Um elemento com [data-anim] nasce deslocado e transparente, e sobe ao entrar
+   na tela. A regra que esconde depende de .js-anim no <html>, colocada por um
+   script no <head>: sem JavaScript nada some, a página aparece inteira.
+   Só opacity e transform, que o navegador compõe na GPU sem recalcular layout.
+   ========================================================================== */
+
+.js-anim [data-anim] {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+[data-anim] {
+  transition:
+    opacity   .65s cubic-bezier(.22, .61, .36, 1),
+    transform .65s cubic-bezier(.22, .61, .36, 1);
+}
+
+[data-anim].is-visivel {
+  opacity: 1;
+  transform: none;
+}
+
+/* Escalonamento: o segundo elemento de cada dobra entra um pouco depois do
+   primeiro, o que dá a leitura de cima para baixo. */
+.hero__subtitle[data-anim]        { transition-delay: .10s; }
+.hero__mockup[data-anim]          { transition-delay: .18s; }
+.about__copy[data-anim]           { transition-delay: .12s; }
+.plans-head__subtitle[data-anim]  { transition-delay: .10s; }
+.plano--essencial[data-anim]      { transition-delay: .12s; }
+.plano--total[data-anim]          { transition-delay: .24s; }
+.cta__button[data-anim]           { transition-delay: .10s; }
+.footer__legal[data-anim]         { transition-delay: .12s; }
+
+/* O mockup é grande: um deslocamento menor evita a sensação de peso caindo.
+   O :not(.is-visivel) é obrigatório — sem ele esta regra tem mais especificidade
+   que o [data-anim].is-visivel e o mockup ficaria travado 14px abaixo para sempre. */
+.js-anim .hero__mockup[data-anim]:not(.is-visivel) {
+  transform: translateY(14px);
+}
+
+/* Quem pediu menos movimento no sistema não recebe nenhum. Não é enfeite:
+   movimento de entrada dispara enjoo em quem tem distúrbio vestibular. */
+@media (prefers-reduced-motion: reduce) {
+  .js-anim [data-anim],
+  .js-anim .hero__mockup[data-anim] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
