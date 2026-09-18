@@ -7,6 +7,14 @@
    ========================================================================== */
 
 .site-header {
+  /* Fixo no topo. sticky e não fixed de propósito: sticky continua ocupando
+     espaço no fluxo, então o hero não precisa de padding-top de compensação e
+     nada pula quando o header aparece.
+     O z-index tem de vencer .hero (100 no mobile), .plans-head (100) e
+     .planos-cards (101), que já disputam camada entre si. */
+  position: sticky;
+  top: 0;
+  z-index: 300;
   /* O mockup traz uma faixa cinza, mas coladinha no gradiente do hero ela
      suja a transição. Branco com um fio de borda dá o mesmo recorte e some. */
   background-color: var(--c-white);
@@ -163,9 +171,11 @@
    sozinho para a linha de baixo; o `order` compensa ele vir antes do
    botão no HTML. */
 @media (max-width: 767px) {
-  /* o painel do menu é ancorado no header, por isso o position:relative */
+  /* Sem position:relative aqui: ele venceria o position:sticky da regra base e
+     o header deixaria de ser fixo justamente no celular. O painel do menu não
+     precisa disso — ele se ancora no .site-header__inner, que é .container e
+     já é relative pelo base.css. */
   .site-header {
-    position: relative;
     padding: 8px 28px;
   }
 
@@ -241,6 +251,13 @@
   .site-header__item + .site-header__item .site-header__link {
     border-top: 1px solid #F0F0F3;
   }
+}
+
+/* Alvos do menu: param abaixo do header fixo, não atrás dele. */
+#o-que-e,
+#planos,
+#contato {
+  scroll-margin-top: var(--h-header);
 }
 
 /* ===== 01-hero ===== */
@@ -352,38 +369,6 @@
    ========================================================================== */
 
 
-/* ==========================================================================
-   Botão flutuante "Acessar área logada"
-   Mantido da v1 por decisão do cliente: convive com o "Acesso Portal RH"
-   do header novo. Vive fora do <header> e das <section> porque é position:fixed.
-   ========================================================================== */
-.floating-cta {
-  position: fixed;
-  right: 28px;
-  bottom: 28px;
-  /* na v1 esse margin-bottom vinha do "widgets space" do Elementor; num elemento
-     fixo ele soma ao bottom, então o afastamento real da base é 28+20 = 48px */
-  margin-bottom: 20px;
-  z-index: 99999;
-  padding: 11px 28px;   /* mesma anatomia do botão do header */
-  border-radius: 100px;
-  background-color: transparent;
-  background-image: var(--g-brand);
-  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
-  font-family: var(--ff-body);
-  font-size: 14px;
-  font-weight: 600;   /* era o único botão 500 da página */
-  line-height: 1;   /* a altura (36px) vem do padding, não da entrelinha */
-  color: var(--c-white);
-  transition: background-image .5s;
-}
-
-.floating-cta:hover,
-.floating-cta:focus {
-  background-image: var(--g-brand-hover);
-  color: var(--c-white);
-}
-
 @media (max-width: 1024px) {
   .hero {
     padding: 0 40px;
@@ -482,12 +467,6 @@
   }
 
   /* <=767 o spec repete width:80% na imagem: idêntico ao desktop */
-
-  /* Botão flutuante: mesmo recuo reduzido da v1 no mobile */
-  .floating-cta {
-    right: 16px;
-    bottom: 16px;
-  }
 }
 
 /* ===== 02-o-que-e ===== */
@@ -1380,10 +1359,7 @@
   }
 
   .footer__inner {
-    /* 98px = a faixa que o .floating-cta ocupa (16 de bottom + 20 de margem +
-       38 de altura) mais os 24px de respiro; sem isso o botão fixo cobre o
-       link da política de privacidade no fim da página */
-    padding: 48px 0 98px;
+    padding: 48px 0 24px;
   }
 
   .footer__cols {
