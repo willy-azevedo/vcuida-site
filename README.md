@@ -33,6 +33,29 @@ ordem das seções do `index.html`. Para mexer em um bloco, ache o banner corres
 Os breakpoints são os mesmos do Elementor e só existem dois:
 `@media (max-width: 1024px)` e `@media (max-width: 767px)`.
 
+## Preview no ar
+
+A **v2** está publicada em GitHub Pages para o cliente ver:
+
+**<https://willy-azevedo.github.io/vcuida-site/>**
+
+- Repositório: <https://github.com/willy-azevedo/vcuida-site> (público)
+- Branch `main`: o projeto inteiro — v1 na raiz, v2 em `v2/`
+- Branch `gh-pages`: só a v2, servida na raiz do Pages
+
+Para atualizar o preview depois de mexer na v2:
+
+```bash
+./publicar-preview.sh
+```
+
+O script monta o branch `gh-pages` num worktree temporário, copia `v2/` para a raiz
+e injeta `<meta name="robots" content="noindex, nofollow">` mais um `robots.txt` com
+`Disallow: /`. **Esses dois só existem na cópia do Pages**, nunca em `v2/index.html` —
+assim não há risco de subir um `noindex` junto com a página quando ela for para o
+WordPress. O preview não é indexado pelo Google, mas quem tiver o link acessa: são os
+preços novos e um redesign ainda não lançado, então trate o link como interno.
+
 ## Como visualizar
 
 ```bash
