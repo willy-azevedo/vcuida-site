@@ -32,8 +32,22 @@ e as animações de entrada (ver as seções abaixo).
   migraram para a nova grade de 6 cards da seção "O que é".
 
 ### Continua igual
-- O botão flutuante "Acessar área logada", por decisão sua. Convive com o "Acesso Portal RH"
-  do header — os dois apontam para `webapp.vcuida.com.br`.
+- (nada — o botão flutuante "Acessar área logada" foi removido a pedido da cliente,
+  ver "Pedidos da cliente" abaixo)
+
+## Pedidos da cliente (Camila, WhatsApp)
+
+1. **"Acesso Portal RH" passou a apontar para `https://portalplugin.nexusaa.com.br/`**
+   (era `webapp.vcuida.com.br`). Conferido: a URL responde 200, sem redirecionamento.
+2. **O botão flutuante "Acessar área logada" saiu.** Isso reverte a decisão anterior de
+   manter os dois botões de acesso. Junto com ele saíram os 74px que o rodapé reservava
+   no mobile só para o botão fixo não cobrir o link da política de privacidade.
+3. **O header ficou fixo** (`position: sticky`, não `fixed`: sticky continua ocupando
+   espaço no fluxo, então o hero não precisa de compensação e nada pula quando o header
+   aparece). `z-index: 300` para vencer o hero, a faixa de planos e os cards, que já
+   disputam camada entre si. As âncoras do menu ganharam
+   `scroll-margin-top: var(--h-header)` — sem isso o header fixo taparia o topo da seção
+   de destino. O token vale 83px no desktop, 79px até 1024 e 61px no mobile.
 
 ## Planos: o antes e o depois
 
@@ -163,7 +177,8 @@ o **conteúdo e a estrutura** que o cliente pediu e refez as **proporções**:
 | altura dos 4 botões | 38 / 38 / 42 / 64px, pesos 500 e 600 | **36 / 36 / 42 / 64px**, todos 600 |
 
 Também corrigidos, todos medidos: no mobile os cards subiam 240px contra uma faixa de 210px
-e comiam o respiro do subtítulo; o botão flutuante cobria o link da política de privacidade
+e comiam o respiro do subtítulo; o botão flutuante (na época ainda existia) cobria o link
+da política de privacidade
 no fim da página; o preço (Kanit 600) pesava mais que o H1 (Kanit 200) e voltou a 500; os
 gutters laterais a 1024px usavam cinco valores diferentes e passaram a usar 40px.
 

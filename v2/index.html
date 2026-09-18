@@ -46,7 +46,7 @@
   
         <!-- No mobile o rótulo encurta para "Portal RH"; o aria-label preserva
              o nome completo para leitor de tela nas duas larguras. -->
-        <a class="site-header__portal" href="https://webapp.vcuida.com.br/" target="_blank" rel="noopener" aria-label="Acesso Portal RH"><span class="site-header__portal-prefixo">Acesso </span>Portal RH</a>
+        <a class="site-header__portal" href="https://portalplugin.nexusaa.com.br/" target="_blank" rel="noopener" aria-label="Acesso Portal RH"><span class="site-header__portal-prefixo">Acesso </span>Portal RH</a>
   
         <!-- Só aparece abaixo de 767px. Fora daí o menu está sempre visível. -->
         <button class="site-header__burger" type="button" aria-expanded="false" aria-controls="menu-principal" aria-label="Abrir menu">
@@ -81,11 +81,6 @@
         </div>
       </div>
     </section>
-
-  <!-- Botão flutuante: no Elementor ele mora dentro do hero, mas é position:fixed
-         no canto inferior direito e acompanha o scroll da página inteira — ou seja,
-         não pertence ao hero. Fica de propósito FORA da <section>. -->
-    <a class="floating-cta" href="https://webapp.vcuida.com.br/" target="_blank">Acessar área logada</a>
 
   <!-- ============================================================
          02 · O que é — grade de 6 serviços + bloco de texto
@@ -500,6 +495,54 @@
   window.addEventListener('scroll', agendar, { passive: true });
   window.addEventListener('resize', agendar);
   conferir();
+
+  /* Destino de âncora chega pronto.
+
+     Sem isto, clicar em "Planos" leva para uma seção cujo título ainda está
+     em opacity 0: ele desbota para dentro por 650ms na frente de quem acabou
+     de chegar. A rolagem suave do CSS já revela o caminho durante o percurso,
+     mas o destino em si precisa estar montado ao encostar — e quando a rolagem
+     suave não existe (movimento reduzido, navegador antigo, URL colada com
+     #planos) o salto é instantâneo e o problema voltaria inteiro.
+
+     Revelar com a transição desligada é o ponto: não é "animar mais rápido",
+     é não animar o que a pessoa já está olhando. */
+  function prepararDestino(alvo) {
+    if (!alvo) return;
+    var dentro = [].slice.call(alvo.querySelectorAll('[data-anim]'));
+    if (alvo.hasAttribute && alvo.hasAttribute('data-anim')) dentro.push(alvo);
+    if (!dentro.length) return;
+
+    dentro.forEach(function (el) { el.classList.add('sem-transicao'); });
+    dentro.forEach(revelar);
+    alvos = alvos.filter(function (el) { return dentro.indexOf(el) === -1; });
+
+    /* Lê uma propriedade de layout para forçar o navegador a aplicar o estado
+       revelado ainda sem transição; só então devolve a transição ao elemento.
+       Sem esta leitura, as duas mudanças entram no mesmo quadro e a transição
+       roda assim mesmo. */
+    void document.documentElement.offsetHeight;
+    dentro.forEach(function (el) { el.classList.remove('sem-transicao'); });
+  }
+
+  function alvoDoHash(hash) {
+    if (!hash || hash.charAt(0) !== '#' || hash.length < 2) return null;
+    try { return document.getElementById(decodeURIComponent(hash.slice(1))); }
+    catch (e) { return null; }
+  }
+
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest && e.target.closest('a[href^="#"]');
+    if (link) prepararDestino(alvoDoHash(link.getAttribute('href')));
+  }, true);   /* na captura: roda antes de a navegação começar */
+
+  window.addEventListener('hashchange', function () {
+    prepararDestino(alvoDoHash(location.hash));
+  });
+
+  /* URL aberta já com #planos: o navegador pula para lá antes de qualquer
+     rolagem, então o destino tem de nascer pronto. */
+  if (location.hash) prepararDestino(alvoDoHash(location.hash));
 })();
 </script>
 </body>

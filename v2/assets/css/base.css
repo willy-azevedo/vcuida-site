@@ -35,6 +35,11 @@
   --g-portal:        linear-gradient(90deg, #8B1680 0%, #003886 100%);
   --g-portal-hover:  linear-gradient(90deg, #6E1166 0%, #002A66 100%);
 
+  /* Altura do header fixo. Serve de scroll-margin-top das âncoras: sem isso
+     o header tapa o topo da seção para onde o menu leva. Os valores são a
+     altura medida em cada faixa (logo + padding vertical). */
+  --h-header: 83px;
+
   /* ---- Layout ---- */
   --container: 1240px;
   --gutter: 10px;
@@ -77,8 +82,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   position: relative;
 }
 
-@media (max-width: 1024px) { :root { --container: 1024px; } }
-@media (max-width: 767px)  { :root { --container: 767px;  } }
+@media (max-width: 1024px) { :root { --container: 1024px; --h-header: 79px; } }
+@media (max-width: 767px)  { :root { --container: 767px;  --h-header: 61px; } }
 
 /* ---- Utilitários -------------------------------------------------------- */
 .sr-only {
@@ -102,6 +107,13 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .js-anim [data-anim] {
   opacity: 0;
   transform: translateY(22px);
+}
+
+/* Aplicada por um instante quando o destino de uma âncora precisa aparecer já
+   pronto: revela sem transição, em vez de o bloco montar na frente de quem
+   acabou de chegar nele. */
+.js-anim [data-anim].sem-transicao {
+  transition: none;
 }
 
 [data-anim] {
@@ -131,6 +143,18 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
    que o [data-anim].is-visivel e o mockup ficaria travado 14px abaixo para sempre. */
 .js-anim .hero__mockup[data-anim]:not(.is-visivel) {
   transform: translateY(14px);
+}
+
+/* Rolagem suave para os links de âncora do menu. Fica junto das animações de
+   propósito: com o salto instantâneo, quem clica em "Planos" aterrissa em cima
+   de um título que ainda vai desbotar para dentro. Com a rolagem suave o
+   conteúdo se revela durante o percurso e a chegada já está pronta.
+   Só dentro do no-preference: rolagem automática é um dos gatilhos clássicos
+   de enjoo em quem tem distúrbio vestibular. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* Quem pediu menos movimento no sistema não recebe nenhum. Não é enfeite:
