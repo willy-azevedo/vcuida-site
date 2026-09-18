@@ -877,13 +877,31 @@
   border: 1px solid var(--c-line);
   border-radius: 16px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
-  /* o lift é 500ms linear (herdado da v1); a sombra usa os 0.3s do tema */
-  transition: transform 500ms linear, box-shadow 0.3s;
+  /* O lift é 500ms linear (herdado da v1) e a sombra usa os 0.3s do tema.
+     opacity e transform da ENTRADA precisam estar nesta lista: base.css
+     declara [data-anim] antes deste arquivo e com a mesma especificidade,
+     então quem manda aqui é este seletor — sem estas duas linhas o card
+     estala em vez de entrar.
+     Só opacity: transform já está na lista por causa do lift, e repeti-lo faria
+     a última declaração vencer, trocando os 500ms lineares do hover pelos 650ms
+     da entrada. O deslocamento de entrada do card usa, então, a curva do lift. */
+  transition: transform 500ms linear, box-shadow 0.3s,
+              opacity .65s cubic-bezier(.22, .61, .36, 1);
 }
 
 .plano:hover {
   transform: translateY(-30px);
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.13);
+}
+
+/* Quem pediu menos movimento não recebe o lift — ele deixa de existir, em vez
+   de acontecer sem suavização. A sombra continua dando o retorno de hover.
+   Precisa morar aqui, depois da regra acima: mesma especificidade, ganha por
+   ordem de arquivo. */
+@media (prefers-reduced-motion: reduce) {
+  .plano:hover {
+    transform: none;
+  }
 }
 
 /* ---- Cabeçalho colorido -------------------------------------------------
@@ -1082,7 +1100,10 @@
   .plano {
     margin-bottom: 20px;
     padding: 28px 24px;
-    transition: box-shadow 0.3s;  /* sem lift onde não existe hover de mouse */
+    /* sem lift onde não existe hover de mouse, mas a entrada continua */
+    transition: box-shadow 0.3s,
+                opacity .65s cubic-bezier(.22, .61, .36, 1),
+              transform .65s cubic-bezier(.22, .61, .36, 1);
   }
 
   .plano:hover { transform: none; }
@@ -1153,7 +1174,9 @@
   line-height: 1;           /* a altura do botao vem do padding, nao da entrelinha */
   color: var(--c-white);
   text-align: center;
-  transition: background-color .3s, border-color .3s, color .3s;
+  transition: background-color .3s, border-color .3s, color .3s,
+              opacity .65s cubic-bezier(.22, .61, .36, 1),
+              transform .65s cubic-bezier(.22, .61, .36, 1);
 }
 
 .cta__button:hover,

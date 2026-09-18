@@ -31,8 +31,8 @@
 <body>
 
   <!-- ============================================================
-         00 · Header — faixa cinza com logo, menu e acesso ao portal
-         Não é sticky: o mockup não indica header fixo.
+         00 · Header — logo, menu e acesso ao portal.
+         Fixo no topo (position:sticky), a pedido do cliente.
          ============================================================ -->
     <header class="site-header">
       <div class="container site-header__inner">
@@ -427,7 +427,13 @@
   });
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { abrir(false); burger.focus(); }
+    if (e.key !== 'Escape') return;
+    /* Nada aberto: Esc não é nosso. Sem esta guarda o focus() no hambúrguer
+       arrastava a página inteira de volta ao topo e roubava o foco de quem
+       navegava por teclado no meio do conteúdo. */
+    if (burger.getAttribute('aria-expanded') !== 'true') return;
+    abrir(false);
+    burger.focus();
   });
 })();
 
@@ -447,7 +453,15 @@
   var alvos = [].slice.call(document.querySelectorAll('[data-anim]'));
   if (!alvos.length) return;
 
-  function revelar(el) { el.classList.add('is-visivel'); }
+  function revelar(el) {
+    el.classList.add('is-visivel');
+    /* Depois de entrar, o elemento não precisa mais de [data-anim] — e mantê-lo
+       cola o transition-delay do escalonamento na transição PRÓPRIA do
+       componente: .plano--total[data-anim] tem mais especificidade que .plano,
+       então o lift do card VCUIDA TOTAL passava a esperar 240ms no hover (e na
+       saída). 1200ms cobre o pior caso: 180ms de atraso + 650ms de transição. */
+    setTimeout(function () { el.removeAttribute('data-anim'); }, 1200);
+  }
 
   /* Movimento reduzido: mostra tudo de uma vez e não instala nada. */
   if (window.matchMedia
@@ -512,8 +526,33 @@
      é não animar o que a pessoa já está olhando. */
   function prepararDestino(alvo) {
     if (!alvo) return;
-    var dentro = [].slice.call(alvo.querySelectorAll('[data-anim]'));
-    if (alvo.hasAttribute && alvo.hasAttribute('data-anim')) dentro.push(alvo);
+
+    /* O que precisa estar pronto não é "o que está dentro da seção de destino",
+       é o que vai estar NA TELA quando a rolagem parar. Os dois não coincidem:
+       os três cards de preço moram na seção irmã .planos-cards, puxada 240px
+       para cima, e caem dentro da tela de chegada de #planos; e a rolagem para
+       #contato bate no fim do documento antes de alcançar o rodapé, deixando o
+       bloco de CTA na tela. Daí o Math.min: o que importa é onde o navegador
+       realmente para, não onde o alvo está. */
+    var doc = document.documentElement;
+    var alturaTela = window.innerHeight || doc.clientHeight;
+    var topoAlvo = alvo.getBoundingClientRect().top + window.pageYOffset;
+    /* O navegador para acima do topo do alvo pelo scroll-margin-top (a altura
+       do header fixo), então a faixa logo acima da seção também aterrissa na
+       tela — e ficaria de fora se o cálculo usasse o topo do alvo puro. */
+    var margem = parseFloat(getComputedStyle(alvo).scrollMarginTop) || 0;
+    var pousa = Math.min(topoAlvo - margem, Math.max(0, doc.scrollHeight - alturaTela));
+
+    /* Varre todos os [data-anim], não só os pendentes: um elemento já revelado
+       pode estar no meio da transição de 650ms, e esse também tem de ser
+       travado. */
+    var dentro = [].slice.call(document.querySelectorAll('[data-anim]'))
+      .filter(function (el) {
+        var r = el.getBoundingClientRect(), topo = r.top + window.pageYOffset;
+        return topo < pousa + alturaTela && topo + r.height > pousa;
+      });
+    if (alvo.hasAttribute && alvo.hasAttribute('data-anim')
+        && dentro.indexOf(alvo) === -1) dentro.push(alvo);
     if (!dentro.length) return;
 
     dentro.forEach(function (el) { el.classList.add('sem-transicao'); });
